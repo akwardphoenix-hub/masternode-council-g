@@ -8,13 +8,17 @@ function VotingRecords({ votes, proposals }) {
         <p>No votes recorded yet.</p>
       ) : (
         votes.map((vote, idx) => {
-          const proposal = proposals.find(p => p.id === vote.proposalId);
+          // Support both old and new format for proposal matching
+          const proposal = proposals.find(p => 
+            (p.id === vote.proposalId) || (p.proposal_id === vote.proposalId)
+          );
+          const voter = vote.voter || vote.node || "Unknown";
           return (
             <div key={idx} className="vote-card">
               <p>
                 <strong>{proposal ? proposal.title : "Unknown Proposal"}</strong>
               </p>
-              <p>{new Date(vote.timestamp).toLocaleString()}</p>
+              <p>{voter} • {new Date(vote.timestamp).toLocaleString()}</p>
               <p>
                 <span
                   style={{
