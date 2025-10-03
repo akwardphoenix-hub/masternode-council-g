@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Progress } from '@/components/ui/progress'
 import { Scales, Plus, Check, X, Clock, Eye, Users, FileText, FunnelSimple, SortAscending, Warning } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
@@ -252,8 +253,43 @@ function App() {
           </TabsList>
 
           <TabsContent value="proposals" className="space-y-6">
+            {proposalsNeedingVote.length > 0 && statusFilter !== 'needs-vote' && (
+              <Card className="border-amber-500 bg-amber-50 dark:bg-amber-950">
+                <CardContent className="py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Warning size={20} className="text-amber-600" />
+                      <div>
+                        <p className="font-medium text-amber-900 dark:text-amber-100">
+                          {proposalsNeedingVote.length} {proposalsNeedingVote.length === 1 ? 'proposal needs' : 'proposals need'} your vote
+                        </p>
+                        <p className="text-sm text-amber-700 dark:text-amber-300">
+                          Quick action required to keep governance moving efficiently
+                        </p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      onClick={() => setStatusFilter('needs-vote')}
+                      className="bg-amber-600 hover:bg-amber-700"
+                    >
+                      Review Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-xl font-semibold">Council Proposals</h2>
+              <div>
+                <h2 className="text-xl font-semibold">Council Proposals</h2>
+                {getFilteredAndSortedProposals().length > 0 && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Showing {getFilteredAndSortedProposals().length} of {(proposals || []).length} proposals
+                  </p>
+                )}
+              </div>
               <div className="flex flex-wrap items-center gap-2">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[180px]">
@@ -363,15 +399,27 @@ function App() {
                       <p className="text-foreground">{proposal.description}</p>
                       
                       {voteCounts.total > 0 && (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Vote Results:</span>
                             <span className="text-muted-foreground">{voteCounts.total} total votes</span>
                           </div>
-                          <div className="flex gap-4 text-sm">
-                            <span className="text-green-600">✓ {voteCounts.approve} Approve</span>
-                            <span className="text-red-600">✗ {voteCounts.reject} Reject</span>
-                            <span className="text-gray-600">– {voteCounts.abstain} Abstain</span>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-green-600 w-16">Approve</span>
+                              <Progress value={(voteCounts.approve / voteCounts.total) * 100} className="flex-1 h-2 [&>div]:bg-green-600" />
+                              <span className="text-xs font-medium text-green-600 w-8 text-right">{voteCounts.approve}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-red-600 w-16">Reject</span>
+                              <Progress value={(voteCounts.reject / voteCounts.total) * 100} className="flex-1 h-2 [&>div]:bg-red-600" />
+                              <span className="text-xs font-medium text-red-600 w-8 text-right">{voteCounts.reject}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-gray-600 w-16">Abstain</span>
+                              <Progress value={(voteCounts.abstain / voteCounts.total) * 100} className="flex-1 h-2 [&>div]:bg-gray-400" />
+                              <span className="text-xs font-medium text-gray-600 w-8 text-right">{voteCounts.abstain}</span>
+                            </div>
                           </div>
                         </div>
                       )}
