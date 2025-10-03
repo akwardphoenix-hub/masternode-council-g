@@ -1,0 +1,285 @@
+# Copilot Environment Setup Steps
+# This file documents the setup process for the Masternode Council Governance System
+# Use these steps to ensure a consistent development environment
+
+name: Masternode Council Development Environment
+
+description: |
+  Automated setup for the Brave Codex + Masternode Council Governance System.
+  This ensures all developers and AI assistants have a consistent environment.
+
+# Node.js and Package Manager
+node_version: "20.x"
+package_manager: npm
+
+# Core Dependencies Installation
+dependencies:
+  install_command: "npm install"
+  verify_command: "npm list --depth=0"
+  
+  # Key packages (auto-installed via package.json)
+  core_packages:
+    - react@19.0.0
+    - react-dom@19.0.0
+    - typescript@5.7.2
+    - vite@6.3.5
+    - "@github/spark@^0.39.0"
+  
+  ui_framework:
+    - "@tailwindcss/vite@^4.1.11"
+    - "tailwindcss@^4.1.11"
+    - "@radix-ui/*"  # shadcn/ui components
+    - "@phosphor-icons/react@^2.1.7"
+  
+  state_management:
+    - "@github/spark/hooks"  # useKV for persistent storage
+  
+  utilities:
+    - "clsx"  # className utilities
+    - "tailwind-merge"  # Tailwind class merging
+    - "sonner"  # Toast notifications
+    - "date-fns"  # Date formatting
+
+# Development Tools
+dev_tools:
+  linting:
+    - eslint@^9.28.0
+    - "@typescript-eslint/*"
+    - eslint-plugin-react-hooks
+    - eslint-plugin-react-refresh
+  
+  type_checking:
+    - typescript@~5.7.2
+  
+  build:
+    - vite@^6.3.5
+    - "@vitejs/plugin-react-swc"
+
+# Build and Development Commands
+commands:
+  # Development server (hot reload)
+  dev:
+    command: "npm run dev"
+    description: "Start Vite dev server with hot module replacement"
+    port: 5173
+    
+  # Production build
+  build:
+    command: "npm run build"
+    description: "Build TypeScript and bundle with Vite"
+    output_dir: "dist"
+    
+  # Code linting
+  lint:
+    command: "npm run lint"
+    description: "Run ESLint on the codebase"
+    fix_command: "npm run lint -- --fix"
+    
+  # Preview production build
+  preview:
+    command: "npm run preview"
+    description: "Preview production build locally"
+    port: 4173
+
+# Project Structure Setup
+project_structure:
+  verify_directories:
+    - src/
+    - src/components/
+    - src/components/ui/
+    - src/services/
+    - public/
+    - public/data/
+    - .github/
+    - .github/instructions/
+  
+  create_if_missing:
+    - public/data/  # For local JSON data files
+    - src/__tests__/  # For test files
+    - src/__tests__/integration/
+    - src/__tests__/e2e/
+
+# Configuration Files
+config_files:
+  typescript: "tsconfig.json"
+  vite: "vite.config.ts"
+  tailwind: "tailwind.config.js"
+  eslint: "eslint.config.js"
+  spark: "spark.meta.json"
+  components: "components.json"  # shadcn/ui config
+
+# Environment Variables
+environment:
+  # Note: Actual keys should be in .env (not committed)
+  required_vars:
+    - NODE_ENV  # development | production
+  
+  optional_vars:
+    - API_KEY  # For external API integrations (e.g., Congress.gov)
+    - VITE_APP_NAME  # Application name
+  
+  env_file: ".env"
+  env_example: ".env.example"
+
+# Git Configuration
+git:
+  ignore:
+    - node_modules/
+    - dist/
+    - .env
+    - .env.local
+    - "*.log"
+    - ".vite/"
+    - ".DS_Store"
+  
+  pre_commit_checks:
+    - "npm run lint"
+    - "npm run build"
+
+# Setup Steps (in order)
+setup_steps:
+  1_verify_node:
+    description: "Verify Node.js version"
+    command: "node --version"
+    expected_output: "v20.x.x"
+    
+  2_install_dependencies:
+    description: "Install all npm dependencies"
+    command: "npm install"
+    expected_outcome: "node_modules/ directory created"
+    
+  3_verify_typescript:
+    description: "Verify TypeScript is working"
+    command: "npx tsc --version"
+    expected_output: "Version 5.7.x"
+    
+  4_verify_vite:
+    description: "Verify Vite is installed"
+    command: "npx vite --version"
+    expected_output: "vite/6.x.x"
+    
+  5_check_structure:
+    description: "Verify project structure"
+    files_must_exist:
+      - "src/App.tsx"
+      - "src/main.tsx"
+      - "index.html"
+      - "vite.config.ts"
+      - "tsconfig.json"
+      - "BRAVE_CODEX.md"
+      - ".github/copilot-instructions.md"
+      - ".github/instructions/react-components.instructions.md"
+      - ".github/instructions/tests.instructions.md"
+    
+  6_test_dev_server:
+    description: "Verify dev server starts"
+    command: "npm run dev"
+    expected_outcome: "Server running on http://localhost:5173"
+    timeout: 30
+    
+  7_test_build:
+    description: "Verify production build works"
+    command: "npm run build"
+    expected_outcome: "dist/ directory created with bundled files"
+    timeout: 60
+    
+  8_run_linter:
+    description: "Verify linting works"
+    command: "npm run lint"
+    expected_outcome: "No critical linting errors"
+
+# Common Issues and Solutions
+troubleshooting:
+  "eslint: not found":
+    solution: "Run 'npm install' to install dependencies"
+    
+  "Module not found: @github/spark":
+    solution: "Run 'npm install' and verify package.json includes @github/spark"
+    
+  "TypeScript errors in IDE":
+    solution: "Restart TypeScript server or run 'npm run build' to check for errors"
+    
+  "Port 5173 already in use":
+    solution: "Kill the process with 'npm run kill' or use a different port"
+    
+  "Build fails with memory error":
+    solution: "Increase Node.js memory: 'NODE_OPTIONS=--max-old-space-size=4096 npm run build'"
+    
+  "Cannot find module '@/components/ui/*'":
+    solution: "Verify vite.config.ts has correct path alias: '@': resolve(projectRoot, 'src')"
+
+# Validation Checklist
+validation:
+  development_ready:
+    - Dependencies installed (node_modules exists)
+    - Dev server starts successfully
+    - TypeScript compiles without errors
+    - ESLint runs without critical errors
+    - Hot reload works when editing files
+    - Tailwind CSS classes are applied
+    - shadcn/ui components render correctly
+    - Phosphor icons display properly
+    
+  production_ready:
+    - Production build completes successfully
+    - dist/ folder contains optimized bundles
+    - No TypeScript errors
+    - No ESLint errors
+    - All imports resolve correctly
+    - CSS is properly bundled
+    - Assets are optimized
+
+# MCP (Model Context Protocol) Integration
+mcp:
+  future_enhancements:
+    - brave-codex-math.mcp:
+        description: "MCP server exposing Brave Codex math functions"
+        functions:
+          - harmonize(votes): Calculate harmonic balance
+          - auditBalance(logs): Verify audit log integrity
+          - consensusThreshold(votes, threshold): Check if consensus reached
+          - calculatePolarization(votes): Measure vote polarization
+        
+    - governance-validator.mcp:
+        description: "MCP server for validating governance operations"
+        functions:
+          - validateProposal(proposal): Ensure all required fields
+          - validateVote(vote): Check vote integrity
+          - validateAuditEntry(entry): Verify audit log entry
+          
+  setup_notes: |
+    MCP servers can be added later to expose Brave Codex logic to external AI models.
+    This allows Copilot and other agents to perform governance calculations consistently.
+
+# Documentation References
+documentation:
+  core_docs:
+    - "README.md": "Project overview and quick start"
+    - "BRAVE_CODEX.md": "Philosophical foundation and math principles"
+    - "PRD.md": "Product requirements and design decisions"
+    - ".github/copilot-instructions.md": "Core Copilot instructions"
+  
+  path_specific:
+    - ".github/instructions/react-components.instructions.md": "React component conventions"
+    - ".github/instructions/tests.instructions.md": "Testing standards and patterns"
+  
+  external:
+    - "https://vitejs.dev/": "Vite documentation"
+    - "https://tailwindcss.com/docs": "Tailwind CSS documentation"
+    - "https://ui.shadcn.com/": "shadcn/ui component library"
+    - "https://phosphoricons.com/": "Phosphor icon library"
+    - "https://react.dev/": "React documentation"
+
+# Notes for AI Assistants
+ai_assistant_notes: |
+  When setting up the environment:
+  1. Always run 'npm install' first if node_modules doesn't exist
+  2. Verify TypeScript and Vite are working before making changes
+  3. Use 'npm run dev' for development with hot reload
+  4. Use 'npm run build' to verify changes compile correctly
+  5. Use 'npm run lint' to check code quality
+  6. Reference BRAVE_CODEX.md for system philosophy
+  7. Follow path-specific instructions in .github/instructions/
+  8. Never delete working code; prefer repair-first approach
+  9. Always create audit log entries for state changes
+  10. Test that the system maintains harmonic balance
