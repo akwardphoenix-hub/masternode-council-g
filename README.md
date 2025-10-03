@@ -12,6 +12,29 @@ This template is your blank canvas. It comes with a minimal setup to help you ge
 
 Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
 
+## 🧪 Testing
+
+This project includes a comprehensive E2E testing suite powered by Playwright:
+
+- **66 test cases** across **7 test suites**
+- Automated testing in CI/CD via GitHub Actions
+- Tests cover: app loading, proposals, voting, audit trail, dashboard stats, workflows, and production builds
+
+### Running Tests
+
+```bash
+# Start the dev server first
+npm run dev
+
+# In another terminal, run tests
+npm run test:e2e              # Run all tests (headless)
+npm run test:e2e:headed       # Run tests with browser UI
+npm run test:e2e:report       # View HTML test report
+npm run test:e2e:ci           # Run tests in CI mode
+```
+
+For more details, see [TESTING.md](./TESTING.md) and [e2e/README.md](./e2e/README.md).
+
 🧹 Just Exploring?
 No problem! If you were just checking things out and don’t need to keep this code:
 
