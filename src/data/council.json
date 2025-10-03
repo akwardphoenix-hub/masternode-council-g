@@ -1,0 +1,56 @@
+{
+  "council-proposals": [
+    {
+      "proposal_id": "proposal-001",
+      "title": "Integrate U.S. Digital Asset Bill Context",
+      "author": "node-delta",
+      "date_submitted": "2025-10-03",
+      "status": "active",
+      "bill": {
+        "congress": "118",
+        "billType": "hr",
+        "billNumber": "4763",
+        "api_endpoint": "https://api.congress.gov/v3/bill/118/hr/4763"
+      }
+    }
+  ],
+  "council-votes": [
+    {
+      "proposal_id": "proposal-001",
+      "votes": [
+        { "node": "node-alpha", "stance": "yes", "timestamp": "2025-10-03T10:00:00Z" },
+        { "node": "node-beta", "stance": "no", "timestamp": "2025-10-03T10:05:00Z" },
+        { "node": "node-gamma", "stance": "abstain", "timestamp": "2025-10-03T10:10:00Z" }
+      ]
+    }
+  ],
+  "audit-log": [
+    {
+      "event": "proposal_created",
+      "proposal_id": "proposal-001",
+      "actor": "node-delta",
+      "timestamp": "2025-10-03T09:55:00Z"
+    },
+    {
+      "event": "vote_cast",
+      "proposal_id": "proposal-001",
+      "actor": "node-alpha",
+      "stance": "yes",
+      "timestamp": "2025-10-03T10:00:00Z"
+    },
+    {
+      "event": "vote_cast",
+      "proposal_id": "proposal-001",
+      "actor": "node-beta",
+      "stance": "no",
+      "timestamp": "2025-10-03T10:05:00Z"
+    },
+    {
+      "event": "vote_cast",
+      "proposal_id": "proposal-001",
+      "actor": "node-gamma",
+      "stance": "abstain",
+      "timestamp": "2025-10-03T10:10:00Z"
+    }
+  ]
+}
