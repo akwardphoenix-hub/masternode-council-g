@@ -11,6 +11,9 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Scales, Plus, Check, X, Clock, Eye, Users, FileText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { recordAudit } from '@/utils/audit'
+import { formatDate, formatDateTime } from '@/utils/dateFormat'
+import { ProposalDetail } from '@/components/ProposalDetail'
 
 interface Proposal {
   id: string
@@ -45,16 +48,16 @@ function App() {
   const [newProposalTitle, setNewProposalTitle] = useState('')
   const [newProposalDescription, setNewProposalDescription] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null)
 
-  const addAuditEntry = (action: string, actor: string, details?: string) => {
-    const entry: AuditEntry = {
-      id: Date.now().toString(),
-      timestamp: new Date().toISOString(),
-      action,
-      actor,
-      details
+  const addAuditEntry = (action: string, actor: string, details?: any) => {
+    try {
+      const entry = recordAudit(action, actor, details)
+      setAuditLog(current => [entry, ...(current || [])])
+    } catch (error) {
+      console.error('Failed to create audit entry:', error)
+      toast.error('Failed to record audit entry')
     }
-    setAuditLog(current => [entry, ...(current || [])])
   }
 
   const submitProposal = () => {
@@ -73,7 +76,10 @@ function App() {
     }
 
     setProposals(current => [proposal, ...(current || [])])
-    addAuditEntry('Proposal Submitted', proposal.author, `"${proposal.title}"`)
+    addAuditEntry('proposal_submitted', proposal.author, { 
+      proposalId: proposal.id, 
+      title: proposal.title 
+    })
     
     setNewProposalTitle('')
     setNewProposalDescription('')
@@ -96,7 +102,10 @@ function App() {
     }
 
     setVotes(current => [...(current || []), newVote])
-    addAuditEntry('Vote Cast', 'Current Node', `${vote} on proposal ${proposalId}`)
+    addAuditEntry('vote_cast', 'Current Node', { 
+      proposalId, 
+      vote 
+    })
     toast.success(`Vote ${vote} recorded`)
   }
 
@@ -125,6 +134,9 @@ function App() {
 
   const activeProposals = (proposals || []).filter(p => p.status === 'pending' || p.status === 'active')
   const recentAudit = (auditLog || []).slice(0, 10)
+  const selectedProposal = selectedProposalId 
+    ? (proposals || []).find(p => p.id === selectedProposalId)
+    : null
 
   return (
     <div className="min-h-screen bg-background">
@@ -199,149 +211,175 @@ function App() {
           </TabsList>
 
           <TabsContent value="proposals" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Council Proposals</h2>
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="gap-2">
-                    <Plus size={16} />
-                    Submit Proposal
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Submit New Proposal</DialogTitle>
-                    <DialogDescription>
-                      Present a proposal for council consideration and voting.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Proposal Title</Label>
-                      <Input
-                        id="title"
-                        placeholder="Enter proposal title..."
-                        value={newProposalTitle}
-                        onChange={(e) => setNewProposalTitle(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        placeholder="Describe the proposal in detail..."
-                        rows={4}
-                        value={newProposalDescription}
-                        onChange={(e) => setNewProposalDescription(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={submitProposal}>Submit Proposal</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            <div className="grid gap-4">
-              {(proposals || []).map((proposal) => {
-                const voteCounts = getVoteCounts(proposal.id)
-                const userVoted = hasUserVoted(proposal.id)
-                
-                return (
-                  <Card key={proposal.id}>
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-lg">{proposal.title}</CardTitle>
-                          <CardDescription className="mt-1">
-                            By {proposal.author} • {new Date(proposal.createdAt).toLocaleDateString()}
-                          </CardDescription>
-                        </div>
-                        <Badge variant={getStatusBadgeVariant(proposal.status)}>
-                          {proposal.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-foreground">{proposal.description}</p>
-                      
-                      {voteCounts.total > 0 && (
+            {selectedProposal ? (
+              <ProposalDetail
+                proposal={selectedProposal}
+                votes={votes || []}
+                onBack={() => setSelectedProposalId(null)}
+                onVote={(vote) => {
+                  castVote(selectedProposal.id, vote)
+                }}
+                hasUserVoted={hasUserVoted(selectedProposal.id)}
+              />
+            ) : (
+              <>
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-semibold">Council Proposals</h2>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <Plus size={16} />
+                        Submit Proposal
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Submit New Proposal</DialogTitle>
+                        <DialogDescription>
+                          Present a proposal for council consideration and voting.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
                         <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Vote Results:</span>
-                            <span className="text-muted-foreground">{voteCounts.total} total votes</span>
-                          </div>
-                          <div className="flex gap-4 text-sm">
-                            <span className="text-green-600">✓ {voteCounts.approve} Approve</span>
-                            <span className="text-red-600">✗ {voteCounts.reject} Reject</span>
-                            <span className="text-gray-600">– {voteCounts.abstain} Abstain</span>
-                          </div>
+                          <Label htmlFor="title">Proposal Title</Label>
+                          <Input
+                            id="title"
+                            placeholder="Enter proposal title..."
+                            value={newProposalTitle}
+                            onChange={(e) => setNewProposalTitle(e.target.value)}
+                          />
                         </div>
-                      )}
-                      
-                      {proposal.status === 'pending' && (
-                        <div className="flex gap-2 pt-2">
-                          <Button
-                            size="sm"
-                            variant="default"
-                            onClick={() => castVote(proposal.id, 'approve')}
-                            disabled={userVoted}
-                            className="gap-1"
-                          >
-                            <Check size={14} />
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => castVote(proposal.id, 'reject')}
-                            disabled={userVoted}
-                            className="gap-1"
-                          >
-                            <X size={14} />
-                            Reject
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => castVote(proposal.id, 'abstain')}
-                            disabled={userVoted}
-                          >
-                            Abstain
-                          </Button>
+                        <div className="space-y-2">
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            id="description"
+                            placeholder="Describe the proposal in detail..."
+                            rows={4}
+                            value={newProposalDescription}
+                            onChange={(e) => setNewProposalDescription(e.target.value)}
+                          />
                         </div>
-                      )}
-                      
-                      {userVoted && (
-                        <p className="text-sm text-muted-foreground italic">
-                          You have already voted on this proposal.
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={submitProposal}>Submit Proposal</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <div className="grid gap-4">
+                  {(proposals || []).map((proposal) => {
+                    const voteCounts = getVoteCounts(proposal.id)
+                    const userVoted = hasUserVoted(proposal.id)
+                    
+                    return (
+                      <Card key={proposal.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                        <CardHeader onClick={() => setSelectedProposalId(proposal.id)}>
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <CardTitle className="text-lg">{proposal.title}</CardTitle>
+                              <CardDescription className="mt-1">
+                                By {proposal.author} • {formatDate(proposal.createdAt)}
+                              </CardDescription>
+                            </div>
+                            <Badge variant={getStatusBadgeVariant(proposal.status)}>
+                              {proposal.status}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <p className="text-foreground line-clamp-2">{proposal.description}</p>
+                          
+                          {voteCounts.total > 0 && (
+                            <div className="flex gap-6 text-sm">
+                              <span className="flex items-center gap-1">
+                                <span className="text-green-600">✅</span>
+                                <span className="font-medium">{voteCounts.approve}</span>
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <span className="text-red-600">❌</span>
+                                <span className="font-medium">{voteCounts.reject}</span>
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <span className="text-gray-600">⚪</span>
+                                <span className="font-medium">{voteCounts.abstain}</span>
+                              </span>
+                              <span className="text-muted-foreground ml-auto">
+                                {voteCounts.total} {voteCounts.total === 1 ? 'vote' : 'votes'}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {proposal.status === 'pending' && !userVoted && (
+                            <div className="flex gap-2 pt-2">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  castVote(proposal.id, 'approve')
+                                }}
+                                className="gap-1"
+                              >
+                                <Check size={14} />
+                                Approve
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  castVote(proposal.id, 'reject')
+                                }}
+                                className="gap-1"
+                              >
+                                <X size={14} />
+                                Reject
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  castVote(proposal.id, 'abstain')
+                                }}
+                              >
+                                Abstain
+                              </Button>
+                            </div>
+                          )}
+                          
+                          {userVoted && (
+                            <p className="text-sm text-muted-foreground italic">
+                              You have already voted on this proposal.
+                            </p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                  
+                  {(proposals || []).length === 0 && (
+                    <Card>
+                      <CardContent className="py-12 text-center">
+                        <FileText size={48} className="mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-medium mb-2">No proposals yet</h3>
+                        <p className="text-muted-foreground mb-4">
+                          Submit the first proposal to get council deliberations started.
                         </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                )
-              })}
-              
-              {(proposals || []).length === 0 && (
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <FileText size={48} className="mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No proposals yet</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Submit the first proposal to get council deliberations started.
-                    </p>
-                    <Button onClick={() => setIsDialogOpen(true)} className="gap-2">
-                      <Plus size={16} />
-                      Submit First Proposal
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+                        <Button onClick={() => setIsDialogOpen(true)} className="gap-2">
+                          <Plus size={16} />
+                          Submit First Proposal
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </>
+            )}
           </TabsContent>
 
           <TabsContent value="votes" className="space-y-6">
@@ -357,7 +395,7 @@ function App() {
                         <div>
                           <p className="font-medium">{proposal?.title || `Proposal ${vote.proposalId}`}</p>
                           <p className="text-sm text-muted-foreground">
-                            {vote.voter} • {new Date(vote.timestamp).toLocaleString()}
+                            {vote.voter} • {formatDateTime(vote.timestamp)}
                           </p>
                         </div>
                         <Badge variant={vote.vote === 'approve' ? 'default' : vote.vote === 'reject' ? 'destructive' : 'secondary'}>
@@ -392,12 +430,16 @@ function App() {
                   <CardContent className="py-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium">{entry.action}</p>
+                        <p className="font-medium">{entry.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
                         <p className="text-sm text-muted-foreground">
-                          {entry.actor} • {new Date(entry.timestamp).toLocaleString()}
+                          {entry.actor} • {formatDateTime(entry.timestamp)}
                         </p>
                         {entry.details && (
-                          <p className="text-sm text-muted-foreground mt-1">{entry.details}</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {typeof entry.details === 'string' 
+                              ? entry.details 
+                              : JSON.stringify(entry.details)}
+                          </p>
                         )}
                       </div>
                     </div>
