@@ -1,33 +1,26 @@
 [
   {
-    "proposal_id": "proposal-001",
-    "bill_id": "hr4763-118",
-    "audit_entries": [
-      {
-        "event": "proposal-created",
-        "node_id": "node-delta",
-        "timestamp": "2025-10-03T13:00:00Z",
-        "hash": "0x123abc456def"
-      },
-      {
-        "event": "vote-cast",
-        "node_id": "node-alpha",
-        "timestamp": "2025-10-03T13:05:00Z",
-        "hash": "0x789ghi101jkl"
-      },
-      {
-        "event": "vote-cast",
-        "node_id": "node-beta",
-        "timestamp": "2025-10-03T13:10:00Z",
-        "hash": "0x567mno202pqr"
-      },
-      {
-        "event": "bill-refresh",
-        "node_id": "system",
-        "timestamp": "2025-10-03T13:30:00Z",
-        "api_endpoint": "https://api.congress.gov/v3/bill/118/hr/4763",
-        "hash": "0x987zyx654wvu"
-      }
-    ]
+    "action": "proposal_submitted",
+    "node": "node-delta",
+    "timestamp": "2023-12-15T06:00:00Z",
+    "details": "Proposal mapped from Congress.gov API (HR 1234)"
+  },
+  {
+    "action": "vote_cast",
+    "node": "node-alpha",
+    "timestamp": "2023-12-16T08:25:00Z",
+    "details": "Vote recorded as APPROVE on proposal-001"
+  },
+  {
+    "action": "vote_cast",
+    "node": "node-beta",
+    "timestamp": "2023-12-16T08:30:00Z",
+    "details": "Vote recorded as REJECT on proposal-001"
+  },
+  {
+    "action": "vote_cast",
+    "node": "node-gamma",
+    "timestamp": "2023-12-17T09:15:00Z",
+    "details": "Vote recorded as ABSTAIN on proposal-002"
   }
 ]
