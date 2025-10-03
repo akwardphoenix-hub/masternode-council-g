@@ -1,23 +1,131 @@
-# ✨ Welcome to Your Spark Template!
-You've just launched your brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
+# Masternode Council Governance App
 
-This template is your blank canvas. It comes with a minimal setup to help you get started quickly with Spark development.
+A decentralized governance platform for managing proposals, voting mechanisms, and maintaining transparent audit trails across distributed nodes.
 
-🚀 What's Inside?
-- A clean, minimal Spark environment
-- Pre-configured for local development
-- Ready to scale with your ideas
-  
-🧠 What Can You Do?
+## 🚀 Quick Start
 
-Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
+### Development
 
-🧹 Just Exploring?
-No problem! If you were just checking things out and don’t need to keep this code:
+```bash
+# Install dependencies
+npm install
 
-- Simply delete your Spark.
-- Everything will be cleaned up — no traces left behind.
+# Start development server
+npm run dev
 
-📄 License For Spark Template Resources 
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Testing
+
+```bash
+# Install test dependencies (first time only)
+npm install
+npx playwright install chromium
+
+# Run all end-to-end tests
+npm run test:e2e
+
+# Run tests with UI (interactive)
+npm run test:e2e:ui
+
+# View test report
+npm run test:report
+```
+
+## 📋 Features
+
+### ✅ Proposal Management
+- Submit governance proposals with detailed descriptions
+- Track proposal status (pending, active, approved, rejected)
+- View complete proposal history
+
+### ✅ Voting System
+- Cast votes: Approve, Reject, or Abstain
+- Real-time vote counting
+- Duplicate vote prevention
+- Transparent voting records
+
+### ✅ Audit Trail
+- Immutable log of all council actions
+- Timestamp tracking for every event
+- Actor information for accountability
+- Complete governance history
+
+### ✅ Council Dashboard
+- Overview of active proposals
+- Statistics and metrics
+- Recent votes display
+- Quick access to all features
+
+## 🧪 Testing
+
+This project includes comprehensive end-to-end tests covering:
+- Proposal creation and management
+- Complete voting workflows
+- Audit log generation and display
+- Dashboard functionality
+- Production build validation
+- Accessibility and performance
+
+See [TESTING.md](./TESTING.md) for detailed testing documentation.
+
+## 🏗️ Pre-Publish Validation
+
+Before publishing, run the comprehensive validation:
+
+```bash
+./scripts/pre-publish-check.sh
+```
+
+This validates:
+- TypeScript compilation
+- Build artifacts
+- Security checks
+- End-to-end tests
+- Production readiness
+
+## 📁 Project Structure
+
+```
+├── e2e/                    # End-to-end tests
+├── src/
+│   ├── components/        # React components
+│   │   └── ui/           # UI components
+│   ├── services/         # API services
+│   ├── hooks/            # Custom React hooks
+│   └── App.tsx           # Main application
+├── scripts/              # Build and validation scripts
+├── playwright.config.ts  # Test configuration
+└── TESTING.md           # Testing documentation
+```
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React 19, TypeScript
+- **UI**: Radix UI, Tailwind CSS
+- **State**: GitHub Spark KV Storage
+- **Testing**: Playwright
+- **Build**: Vite
+
+## 📚 Documentation
+
+- [PRD.md](./PRD.md) - Product Requirements Document
+- [TESTING.md](./TESTING.md) - Comprehensive Testing Guide
+- [e2e/README.md](./e2e/README.md) - End-to-End Test Documentation
+
+## 🤝 Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Write/update tests
+4. Run `npm run test:e2e` to verify
+5. Submit a pull request
+
+## 📄 License
 
 The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
