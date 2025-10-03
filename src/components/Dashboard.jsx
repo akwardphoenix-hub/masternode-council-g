@@ -33,24 +33,28 @@ function Dashboard() {
 
       <h2>Council Proposals</h2>
       <ul>
-        {data.proposals.map((p) => (
-          <li key={p.proposal_id}>
-            <strong>{p.title}</strong> <br />
-            {p.description} <br />
-            <em>
-              By {p.author} on{" "}
-              {p.date_submitted
-                ? new Date(p.date_submitted).toLocaleDateString()
-                : "Unknown date"}
-            </em>
-            <br />
-            {p.congress_url && (
-              <a href={p.congress_url} target="_blank" rel="noreferrer">
-                View on Congress.gov
-              </a>
-            )}
-          </li>
-        ))}
+        {data.proposals.map((p) => {
+          const key = p.id || p.proposal_id;
+          const dateStr = p.createdAt || p.date_submitted;
+          return (
+            <li key={key}>
+              <strong>{p.title}</strong> <br />
+              {p.description} <br />
+              <em>
+                By {p.author} on{" "}
+                {dateStr
+                  ? new Date(dateStr).toLocaleDateString()
+                  : "Unknown date"}
+              </em>
+              <br />
+              {p.congress_url && (
+                <a href={p.congress_url} target="_blank" rel="noreferrer">
+                  View on Congress.gov
+                </a>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
