@@ -1,0 +1,31 @@
+[
+  {
+    "proposal_id": "proposal-001",
+    "title": "Integrate U.S. Digital Asset Bill Context",
+    "author": "node-delta",
+    "date_submitted": "2025-10-03T13:00:00Z",
+    "description": "Proposal to align masternode governance with the U.S. Digital Asset Bill context via live Congress.gov API.",
+    "status": "active",
+    "bill": {
+      "congress": 118,
+      "bill_type": "hr",
+      "bill_number": "4763",
+      "bill_id": "hr4763-118",
+      "api_endpoint": "https://api.congress.gov/v3/bill/118/hr/4763",
+      "auto_refresh": true,
+      "fetch": {
+        "method": "GET",
+        "headers": {
+          "X-API-Key": "<YOUR_CONGRESS_API_KEY>"
+        },
+        "fields": [
+          "title",
+          "sponsor",
+          "introducedDate",
+          "latestAction",
+          "committees"
+        ]
+      }
+    }
+  }
+]
