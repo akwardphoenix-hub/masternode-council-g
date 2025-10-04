@@ -23,9 +23,15 @@ npm run preview
 ### Testing
 
 ```bash
-# Install test dependencies (first time only)
+# Install dependencies
 npm install
+
+# Install Playwright browsers (first time only)
+# Option 1: Standard installation
 npx playwright install chromium
+
+# Option 2: If standard installation fails, use our helper script
+./scripts/install-playwright-browsers.sh
 
 # Run all end-to-end tests
 npm run test:e2e
@@ -36,6 +42,8 @@ npm run test:e2e:ui
 # View test report
 npm run test:report
 ```
+
+**Note:** If you encounter issues installing Playwright browsers, see the [TESTING.md](./TESTING.md) troubleshooting guide.
 
 ## 📋 Features
 

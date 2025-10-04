@@ -26,9 +26,18 @@ e2e/
 ### Install Dependencies
 
 ```bash
+# Install Node.js dependencies
 npm install
+
+# Install Playwright browsers
+# Standard approach:
 npx playwright install chromium
+
+# If the standard installation fails due to download issues, use our helper script:
+./scripts/install-playwright-browsers.sh
 ```
+
+**Important:** The `npm install` command will no longer automatically run tests (the `prepublish` hook has been removed to prevent circular dependency issues).
 
 ### Run All Tests
 
@@ -182,9 +191,17 @@ Tests use the Spark KV storage system which persists data across sessions. To re
 
 ### Tests Fail to Start
 
+If Playwright browsers aren't installed or tests fail with "Executable doesn't exist" errors:
+
 ```bash
-# Reinstall Playwright browsers
+# Try standard installation
 npx playwright install chromium --with-deps
+
+# If that fails, use our helper script
+./scripts/install-playwright-browsers.sh
+
+# Verify browser installation
+ls -la ~/.cache/ms-playwright/
 ```
 
 ### Timeout Issues
@@ -197,10 +214,24 @@ timeout: 30000 // 30 seconds
 ### Port Already in Use
 
 ```bash
-# Kill existing process on port 5173
+# Kill existing process on port 5000
 npm run kill
-# Or manually: fuser -k 5173/tcp
+# Or manually: fuser -k 5000/tcp
 ```
+
+### npm install Issues
+
+**Problem:** If `npm install` fails or gets stuck running tests during installation.
+
+**Solution:** This issue has been fixed! The `prepublish` hook that was causing circular dependency issues has been removed.
+
+```bash
+# Clean install
+rm -rf node_modules package-lock.json
+npm install
+```
+
+The installation will now complete without running E2E tests automatically. Tests should be run separately using `npm run test:e2e`.
 
 ### Headless vs Headed Mode
 

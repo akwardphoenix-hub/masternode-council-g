@@ -11,6 +11,9 @@ npm install
 # Install Playwright browsers (required first time)
 npx playwright install chromium
 
+# If browser installation fails, use the helper script
+./scripts/install-playwright-browsers.sh
+
 # Run all tests
 npm run test:e2e
 
