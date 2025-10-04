@@ -27,6 +27,7 @@ echo "✓ npm: $NPM_VERSION"
 echo ""
 
 echo "Step 2: Installing dependencies..."
+# Using npm ci for clean install (prepublishOnly won't run during this)
 if npm ci --silent; then
     echo -e "${GREEN}✓ Dependencies installed successfully${NC}"
 else
@@ -144,25 +145,29 @@ fi
 echo ""
 
 echo "Step 9: Running end-to-end tests..."
-if npx playwright install chromium --with-deps > /tmp/playwright-install.log 2>&1; then
+# Try to install Playwright browsers without system dependencies first
+if npx playwright install chromium > /tmp/playwright-install.log 2>&1; then
     echo -e "${GREEN}✓ Playwright browsers installed${NC}"
+elif npx playwright install chromium --with-deps > /tmp/playwright-install.log 2>&1; then
+    echo -e "${GREEN}✓ Playwright browsers installed (with system deps)${NC}"
+else
+    echo -e "${YELLOW}⚠ Could not install Playwright browsers automatically${NC}"
+    echo "  You can install manually with: npx playwright install chromium"
+    echo "  Attempting to run tests anyway..."
+fi
+
+if npm run test:e2e > /tmp/e2e-tests.log 2>&1; then
+    echo -e "${GREEN}✓ All E2E tests passed${NC}"
     
-    if npm run test:e2e > /tmp/e2e-tests.log 2>&1; then
-        echo -e "${GREEN}✓ All E2E tests passed${NC}"
-        
-        # Show test summary
-        if grep -A 5 "passed" /tmp/e2e-tests.log | tail -5; then
-            echo ""
-        fi
-    else
-        echo -e "${RED}✗ E2E tests failed${NC}"
-        echo "Last 30 lines of test output:"
-        tail -n 30 /tmp/e2e-tests.log
-        ERRORS=$((ERRORS + 1))
+    # Show test summary
+    if grep -A 5 "passed" /tmp/e2e-tests.log | tail -5; then
+        echo ""
     fi
 else
-    echo -e "${YELLOW}⚠ Could not install Playwright browsers (may need manual installation)${NC}"
-    echo "  You can install manually with: npx playwright install chromium"
+    echo -e "${RED}✗ E2E tests failed${NC}"
+    echo "Last 30 lines of test output:"
+    tail -n 30 /tmp/e2e-tests.log
+    ERRORS=$((ERRORS + 1))
 fi
 echo ""
 

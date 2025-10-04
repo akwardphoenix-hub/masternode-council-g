@@ -15,7 +15,7 @@
         "test:e2e:headed": "playwright test --headed",
         "test:e2e:debug": "playwright test --debug",
         "test:report": "playwright show-report",
-        "prepublish": "npm run build && npm run test:e2e"
+        "prepublishOnly": "npm run build && npm run test:e2e"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",
