@@ -8,8 +8,9 @@ This directory contains comprehensive end-to-end tests for the Masternode Counci
 # Install dependencies
 npm install
 
-# Install Playwright browsers (required first time)
-npx playwright install chromium
+# No browser installation needed! Tests use system Chrome.
+# Verify Chrome is installed:
+google-chrome --version
 
 # Run all tests
 npm run test:e2e
@@ -23,6 +24,8 @@ npm run test:e2e:headed
 # Debug specific test
 npm run test:e2e:debug
 ```
+
+**Note**: This project uses **system Chrome** instead of downloading Playwright browsers. This avoids network/firewall issues and speeds up setup.
 
 ## Test Files
 
@@ -70,16 +73,21 @@ npm run test:report
 
 ## Troubleshooting
 
-### Playwright Not Installed
+### Chrome Not Found
 
 ```bash
-npx playwright install chromium
+# Verify Chrome is installed
+google-chrome --version
+
+# On Ubuntu/Debian, install if needed:
+sudo apt-get install google-chrome-stable
 ```
 
 ### Port Already in Use
 
 ```bash
 npm run kill  # Kill process on port 5000
+# Or: fuser -k 5000/tcp
 ```
 
 ### Tests Timing Out
@@ -94,11 +102,20 @@ npm run test:e2e:debug
 
 # Or run specific test
 npx playwright test e2e/01-app-loads.spec.ts --debug
+
+# View trace of a failed test
+npx playwright show-trace test-results/[test-folder]/trace.zip
 ```
+
+### Network/Firewall Issues
+
+**No need to worry!** This project is configured to use system Chrome, so you don't need to download Playwright browsers. If you see EPIPE or download errors, those are from old instructions - just ignore them and use system Chrome.
 
 ## CI/CD Integration
 
 For GitHub Actions or other CI systems, see [TESTING.md](../TESTING.md) for complete setup instructions.
+
+The CI workflow automatically uses system Chrome - no special configuration needed!
 
 ## Writing New Tests
 
