@@ -39,7 +39,7 @@ This project is configured to use **system-installed Chrome** to avoid network/f
 
 1. Verify Chrome is installed:
 ```bash
-google-chrome --version  # Should show Chrome 130+
+google-chrome --version  # Should show Chrome 90+ (or any modern Chrome version)
 ```
 
 2. Install dependencies:
