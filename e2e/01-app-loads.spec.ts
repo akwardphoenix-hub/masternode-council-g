@@ -25,7 +25,7 @@ test.describe('App Loads', () => {
 
   test('should not show error boundary', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('text=error')).not.toBeVisible({ timeout: 5000 }).catch(() => {});
+    await expect(page.locator('text=error')).not.toBeVisible({ timeout: 5000 });
   });
 
   test('should load within reasonable time', async ({ page }) => {
