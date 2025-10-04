@@ -154,14 +154,32 @@ Add to your CI/CD pipeline:
 - name: Install dependencies
   run: npm ci
 
+- name: Install system packages
+  run: |
+    sudo apt-get update
+    sudo apt-get install -y \
+      libasound2t64 \
+      libnss3 \
+      libatk1.0-0 \
+      libatk-bridge2.0-0 \
+      libcups2 \
+      libdrm2 \
+      libxkbcommon0 \
+      libxcomposite1 \
+      libxdamage1 \
+      libxrandr2 \
+      libgbm1 \
+      libgtk-3-0 \
+      xvfb
+
 - name: Install Playwright
-  run: npx playwright install chromium --with-deps
+  run: npx playwright install chromium
 
 - name: Build
   run: npm run build
 
 - name: Run E2E tests
-  run: npm run test:e2e
+  run: xvfb-run --auto-servernum npm run test:e2e
 
 - name: Upload test report
   if: always()
@@ -184,7 +202,13 @@ Tests use the Spark KV storage system which persists data across sessions. To re
 
 ```bash
 # Reinstall Playwright browsers
-npx playwright install chromium --with-deps
+npx playwright install chromium
+
+# On Ubuntu 24.04+, ensure system dependencies are installed
+sudo apt-get update
+sudo apt-get install -y libasound2t64 libnss3 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 \
+  libgbm1 libgtk-3-0 xvfb
 ```
 
 ### Timeout Issues

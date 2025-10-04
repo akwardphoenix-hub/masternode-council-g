@@ -57,9 +57,16 @@ npm install
 npm run build
 ```
 
-### 3. Install Test Browsers
+### 3. Install System Dependencies (Ubuntu 24.04+)
 ```bash
-npx playwright install chromium --with-deps
+# Install system packages for Playwright (Ubuntu 24.04+ compatible)
+sudo apt-get update
+sudo apt-get install -y libasound2t64 libnss3 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 \
+  libgbm1 libgtk-3-0 xvfb
+
+# Install Playwright browsers
+npx playwright install chromium
 ```
 
 ### 4. Run E2E Tests
@@ -180,9 +187,10 @@ Test in multiple browsers:
 
 ### If Tests Fail
 1. Check Playwright installation: `npx playwright install chromium`
-2. Verify dev server port: Should be 5000
-3. Check for port conflicts: `npm run kill`
-4. Review test logs: `npm run test:report`
+2. Install system dependencies (Ubuntu 24.04+): `sudo apt-get install -y libasound2t64 libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libgtk-3-0 xvfb`
+3. Verify dev server port: Should be 5000
+4. Check for port conflicts: `npm run kill`
+5. Review test logs: `npm run test:report`
 
 ### If Build Fails
 1. Clear cache: `rm -rf node_modules dist`
