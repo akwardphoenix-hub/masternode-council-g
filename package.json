@@ -15,7 +15,8 @@
         "test:e2e:headed": "playwright test --headed",
         "test:e2e:debug": "playwright test --debug",
         "test:report": "playwright show-report",
-        "prepublish": "npm run build && npm run test:e2e"
+        "postinstall": "echo '\n✅ Dependencies installed!\n\n⚠️  IMPORTANT: Before running e2e tests, install Playwright browsers:\n   npx playwright install chromium\n\nThen you can run:\n   npm run dev          - Start development server\n   npm run test:e2e     - Run e2e tests\n   npm run build        - Build for production\n'",
+        "prepublishOnly": "./scripts/pre-publish-check.sh"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",

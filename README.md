@@ -4,12 +4,19 @@ A decentralized governance platform for managing proposals, voting mechanisms, a
 
 ## 🚀 Quick Start
 
+### First Time Setup
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Install Playwright browsers (required for e2e tests)
+npx playwright install chromium
+```
+
 ### Development
 
 ```bash
-# Install dependencies
-npm install
-
 # Start development server
 npm run dev
 
@@ -23,10 +30,6 @@ npm run preview
 ### Testing
 
 ```bash
-# Install test dependencies (first time only)
-npm install
-npx playwright install chromium
-
 # Run all end-to-end tests
 npm run test:e2e
 
@@ -36,6 +39,8 @@ npm run test:e2e:ui
 # View test report
 npm run test:report
 ```
+
+> **Note:** If you skip installing Playwright browsers and try to run e2e tests, you'll see an error. Just run `npx playwright install chromium` to fix it.
 
 ## 📋 Features
 

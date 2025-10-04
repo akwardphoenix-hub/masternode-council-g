@@ -23,12 +23,19 @@ e2e/
 
 ## Running Tests
 
-### Install Dependencies
+### First Time Setup
+
+**⚠️ IMPORTANT:** Before running tests for the first time:
 
 ```bash
+# 1. Install dependencies
 npm install
+
+# 2. Install Playwright browsers (REQUIRED)
 npx playwright install chromium
 ```
+
+> If you try to run tests without installing Playwright browsers, you'll get an error about missing browser executables. Simply run the `npx playwright install chromium` command to fix it.
 
 ### Run All Tests
 

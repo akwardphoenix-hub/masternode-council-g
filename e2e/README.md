@@ -4,13 +4,23 @@ This directory contains comprehensive end-to-end tests for the Masternode Counci
 
 ## Quick Start
 
+**⚠️ IMPORTANT: First Time Setup**
+
+Before running e2e tests for the first time, you MUST install Playwright browsers:
+
 ```bash
-# Install dependencies
+# 1. Install dependencies (if you haven't already)
 npm install
 
-# Install Playwright browsers (required first time)
+# 2. Install Playwright browsers (REQUIRED - only needed once)
 npx playwright install chromium
+```
 
+**Running Tests**
+
+Once browsers are installed, you can run tests:
+
+```bash
 # Run all tests
 npm run test:e2e
 
