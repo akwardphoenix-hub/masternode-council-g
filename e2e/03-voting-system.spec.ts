@@ -64,7 +64,7 @@ test.describe('Voting System', () => {
     await page.goto('/');
     await page.click('button:has-text("Approve")');
     await page.click('text=Voting Records');
-    await expect(page.locator('text=approve')).toBeVisible({ timeout: 5000 }).catch(() => {});
+    await expect(page.locator('text=approve')).toBeVisible({ timeout: 5000 });
   });
 
   test('vote shows timestamp', async ({ page }) => {
