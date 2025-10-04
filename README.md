@@ -37,6 +37,28 @@ npm run test:e2e:ui
 npm run test:report
 ```
 
+### Offline Build & E2E (No Server)
+
+The repo supports a firewall-safe mode for Copilot/CI environments where network access is restricted:
+
+```bash
+# Build the SPA with fixtures bundled and no network:
+npm run build:offline
+
+# Run Playwright E2E against the built file:// app:
+npm run test:e2e:offline
+
+# Combined CI verification (build + test):
+npm run ci:verify
+```
+
+This offline mode:
+- Uses `base: './'` in Vite config so assets work via `file://` URLs
+- Bundles fixture data from `src/fixtures/` into the app
+- Intercepts fetch calls to serve fixtures instead of making network requests
+- Runs Playwright tests against `file://dist/index.html` without starting any HTTP server
+- Blocks external network calls to prevent firewall errors
+
 ## 📋 Features
 
 ### ✅ Proposal Management
