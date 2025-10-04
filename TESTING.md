@@ -197,9 +197,22 @@ timeout: 30000 // 30 seconds
 ### Port Already in Use
 
 ```bash
-# Kill existing process on port 5173
+# Use npm script (works on Linux/macOS)
 npm run kill
-# Or manually: fuser -k 5173/tcp
+
+# Or manually, depending on your OS:
+
+# Linux/macOS
+fuser -k 5173/tcp
+# or
+lsof -ti:5173 | xargs kill -9
+
+# Windows (Command Prompt)
+netstat -ano | findstr :5173
+taskkill /PID <PID> /F
+
+# Windows (PowerShell)
+Get-Process -Id (Get-NetTCPConnection -LocalPort 5173).OwningProcess | Stop-Process -Force
 ```
 
 ### Headless vs Headed Mode

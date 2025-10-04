@@ -180,7 +180,7 @@ Test in multiple browsers:
 
 ### If Tests Fail
 1. Check Playwright installation: `npx playwright install chromium`
-2. Verify dev server port: Should be 5000
+2. Verify dev server port: Should be 5173
 3. Check for port conflicts: `npm run kill`
 4. Review test logs: `npm run test:report`
 
