@@ -132,7 +132,7 @@ test.describe('End-to-End Workflows', () => {
     await page.reload();
     await page.waitForTimeout(1000);
     
-    await expect(page.locator('text=Persistence Test')).toBeVisible({ timeout: 5000 }).catch(() => {});
+    await expect(page.locator('text=Persistence Test')).toBeVisible({ timeout: 5000 });
   });
 
   test('user can interact with multiple proposals', async ({ page }) => {
