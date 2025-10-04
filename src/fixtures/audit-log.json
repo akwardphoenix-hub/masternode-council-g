@@ -1,0 +1,4 @@
+[
+  { "id": "a-100", "actor": "system", "action": "bootstrap", "targetId": "repo", "createdAt": "2025-10-01T09:00:00Z" },
+  { "id": "a-101", "actor": "alpha", "action": "vote:approve", "targetId": "p-001", "createdAt": "2025-10-02T11:00:00Z" }
+]

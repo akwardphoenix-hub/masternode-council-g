@@ -1,0 +1,20 @@
+[
+  {
+    "id": "p-001",
+    "title": "Pilot: Masternode Voting Rules",
+    "description": "Enable quorum=50%, pass=60%, duration=7 days.",
+    "author": "node-alpha",
+    "status": "active",
+    "createdAt": "2025-10-01T10:00:00Z",
+    "votingEndsAt": "2025-10-08T10:00:00Z"
+  },
+  {
+    "id": "p-002",
+    "title": "Ops: Add OFFLINE_E2E Mode",
+    "description": "Run E2E from file:// with fixtures; no server.",
+    "author": "node-beta",
+    "status": "active",
+    "createdAt": "2025-10-02T08:30:00Z",
+    "votingEndsAt": "2025-10-09T08:30:00Z"
+  }
+]

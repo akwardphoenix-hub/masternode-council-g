@@ -1,15 +1,18 @@
 import { test, expect } from '@playwright/test';
+import { indexUrl, blockExternal } from './utils';
 
 test.describe('Application Loading and Basic UI', () => {
   test('should load the application successfully', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     
     // Check that the main title/logo appears
     await expect(page.getByRole('heading', { name: /council/i })).toBeVisible({ timeout: 10000 });
   });
 
   test('should display the main dashboard components', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     
     // Wait for app to load
     await page.waitForLoadState('networkidle');
@@ -21,7 +24,8 @@ test.describe('Application Loading and Basic UI', () => {
   });
 
   test('should display navigation tabs', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
     
     // Check for tabs
@@ -31,7 +35,8 @@ test.describe('Application Loading and Basic UI', () => {
   });
 
   test('should have responsive layout', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
     
     // Check that content is visible and page is scrollable if needed
@@ -40,7 +45,8 @@ test.describe('Application Loading and Basic UI', () => {
   });
 
   test('should have proper page title', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await expect(page).toHaveTitle(/vite|council|spark/i);
   });
 });

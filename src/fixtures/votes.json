@@ -1,0 +1,5 @@
+[
+  { "proposalId": "p-001", "voter": "alpha", "choice": "approve", "createdAt": "2025-10-02T11:00:00Z" },
+  { "proposalId": "p-001", "voter": "beta", "choice": "approve", "createdAt": "2025-10-02T11:05:00Z" },
+  { "proposalId": "p-002", "voter": "alpha", "choice": "abstain", "createdAt": "2025-10-03T09:00:00Z" }
+]

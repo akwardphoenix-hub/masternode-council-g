@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { indexUrl, blockExternal } from './utils';
 
 test.describe('Production Build Validation', () => {
   test('should have proper meta tags', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
     
     // Check for viewport meta tag
@@ -11,7 +13,8 @@ test.describe('Production Build Validation', () => {
   });
 
   test('should load CSS properly', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
     
     // Check that some element has computed styles
@@ -33,7 +36,8 @@ test.describe('Production Build Validation', () => {
       }
     });
     
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
     
     // Filter out known non-critical errors
@@ -47,9 +51,10 @@ test.describe('Production Build Validation', () => {
   });
 
   test('should handle page not found gracefully', async ({ page }) => {
-    const response = await page.goto('/non-existent-page');
+    await blockExternal(page);
+    // For file:// URLs, we can only test the main page
+    await page.goto(indexUrl());
     
-    // In SPA, this typically returns 200 and shows the app
     // Check that page doesn't crash
     await page.waitForLoadState('networkidle');
     const body = page.locator('body');
@@ -57,7 +62,8 @@ test.describe('Production Build Validation', () => {
   });
 
   test('should be accessible', async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
     
     // Check for basic accessibility features

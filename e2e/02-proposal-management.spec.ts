@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { indexUrl, blockExternal } from './utils';
 
 test.describe('Proposal Management', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await blockExternal(page);
+    await page.goto(indexUrl());
     await page.waitForLoadState('networkidle');
   });
 
