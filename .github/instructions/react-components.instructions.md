@@ -31,7 +31,7 @@ These instructions apply when editing React components in the `src/components/` 
 - Use `useKV` hook from `@github/spark/hooks` for persistent key-value storage
 - Always initialize state with proper default values:
   ```typescript
-  const [proposals, setProposals] = useKV<Proposal[]>('council-proposals', [])
+  const [proposals, setProposals] = useKV<Proposal[]>('council-proposals', [] as Proposal[])
   ```
 
 ### Styling Conventions
