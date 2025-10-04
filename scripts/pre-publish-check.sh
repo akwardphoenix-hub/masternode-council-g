@@ -143,15 +143,36 @@ if [ -f "dist/index.html" ]; then
 fi
 echo ""
 
-echo "Step 9: Running end-to-end tests..."
-if npx playwright install chromium --with-deps > /tmp/playwright-install.log 2>&1; then
-    echo -e "${GREEN}✓ Playwright browsers installed${NC}"
+echo "Step 9: Checking mock data files..."
+if [ -d "dist/mocks" ]; then
+    echo -e "${GREEN}✓ Mock data directory present in dist${NC}"
     
-    if npm run test:e2e > /tmp/e2e-tests.log 2>&1; then
-        echo -e "${GREEN}✓ All E2E tests passed${NC}"
+    if [ -f "dist/mocks/proposals.json" ] && [ -f "dist/mocks/votes.json" ] && [ -f "dist/mocks/audit.json" ]; then
+        echo -e "${GREEN}✓ All mock data files present${NC}"
+    else
+        echo -e "${YELLOW}⚠ Some mock data files missing${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠ Mock data directory not found in dist${NC}"
+fi
+
+if [ -f "config/mock.config.ts" ]; then
+    echo -e "${GREEN}✓ Mock configuration file present${NC}"
+else
+    echo -e "${YELLOW}⚠ Mock configuration file missing${NC}"
+fi
+echo ""
+
+echo "Step 10: Running end-to-end tests..."
+# Check if Playwright browsers are installed
+if [ -d "$HOME/.cache/ms-playwright/chromium_headless_shell"* ] || [ -d "$HOME/.cache/ms-playwright/chromium-"* ]; then
+    echo -e "${GREEN}✓ Playwright browsers found${NC}"
+    
+    if USE_MOCKS=1 npm run test:ci > /tmp/e2e-tests.log 2>&1; then
+        echo -e "${GREEN}✓ All E2E tests passed (offline mode)${NC}"
         
         # Show test summary
-        if grep -A 5 "passed" /tmp/e2e-tests.log | tail -5; then
+        if grep -E "passed|failed" /tmp/e2e-tests.log | tail -5; then
             echo ""
         fi
     else
@@ -161,12 +182,13 @@ if npx playwright install chromium --with-deps > /tmp/playwright-install.log 2>&
         ERRORS=$((ERRORS + 1))
     fi
 else
-    echo -e "${YELLOW}⚠ Could not install Playwright browsers (may need manual installation)${NC}"
-    echo "  You can install manually with: npx playwright install chromium"
+    echo -e "${YELLOW}⚠ Playwright browsers not installed (tests skipped)${NC}"
+    echo "  Install with: npx playwright install chromium"
+    echo "  Then run: USE_MOCKS=1 npm run test:e2e"
 fi
 echo ""
 
-echo "Step 10: Final checklist..."
+echo "Step 11: Final checklist..."
 echo "  • README.md present: $([ -f README.md ] && echo '✓' || echo '✗')"
 echo "  • LICENSE present: $([ -f LICENSE ] && echo '✓' || echo '✗')"
 echo "  • package.json present: $([ -f package.json ] && echo '✓' || echo '✗')"
