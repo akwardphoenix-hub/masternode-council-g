@@ -17,11 +17,18 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
-  webServer: {
+  // webServer disabled - tests should run against already-built dist folder
+  // Start preview server manually before running tests: npm run preview
+  webServer: process.env.SKIP_WEBSERVER ? undefined : {
     command: 'npm run preview',
     url: `http://127.0.0.1:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 60_000
+    timeout: 60_000,
+    // Ensure clean startup without external network calls
+    env: {
+      USE_MOCKS: '1',
+      NODE_ENV: 'test'
+    }
   },
   projects: [
     {

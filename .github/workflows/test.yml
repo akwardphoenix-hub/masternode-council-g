@@ -16,15 +16,15 @@ jobs:
           node-version: '20'
       - name: Install deps
         run: npm ci
-      - name: Install Playwright
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
       - name: Build
         run: npm run build
-      - name: Run E2E (mocked)
+      - name: Run E2E tests (offline with mocks)
         env:
           USE_MOCKS: '1'
-          PLAYWRIGHT_TEST_BASE_URL: 'http://127.0.0.1:4173'
-        run: npm run test:e2e
+          NODE_ENV: 'test'
+        run: npm run test:ci
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4

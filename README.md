@@ -22,6 +22,8 @@ npm run preview
 
 ### Testing
 
+All E2E tests run **offline** using mocked data - no external network calls required.
+
 ```bash
 # Install test dependencies (first time only)
 npm install
@@ -30,15 +32,24 @@ npx playwright install chromium
 # Build the app (required for E2E tests)
 npm run build
 
-# Run all end-to-end tests (mocked mode)
+# Run all end-to-end tests (offline mode with mocks)
 USE_MOCKS=1 npm run test:e2e
 
+# Run tests for CI (dot reporter)
+USE_MOCKS=1 npm run test:ci
+
 # Run tests with UI (interactive)
-USE_MOCKS=1 npm run test:e2e:ui
+USE_MOCKS=1 npm run test:ui
 
 # View test report
 npm run test:report
 ```
+
+**Testing Approach:**
+- Tests run against the built `/dist` folder (not dev server)
+- All external API calls are mocked via `/config/mock.config.ts`
+- No network requests to esm.ubuntu.com, api.github.com, or external services
+- Tests use `domcontentloaded` instead of `networkidle` to prevent loops
 
 ## 📋 Features
 
@@ -77,9 +88,11 @@ This project includes comprehensive end-to-end tests covering:
 
 See [TESTING.md](./TESTING.md) for detailed testing documentation.
 
-### E2E Testing
+### E2E Testing Configuration
 
-**Mocked (no network):**
+All tests run **completely offline** without any external network dependencies:
+
+**Standard Test Run:**
 ```bash
 npm ci
 npx playwright install chromium
@@ -87,15 +100,26 @@ npm run build
 USE_MOCKS=1 npm run test:e2e
 ```
 
-**Interactive:**
+**CI Mode (faster feedback):**
 ```bash
-USE_MOCKS=1 npm run test:e2e:ui
+USE_MOCKS=1 npm run test:ci
 ```
 
-**Reports:**
+**Interactive Mode:**
+```bash
+USE_MOCKS=1 npm run test:ui
+```
+
+**View Reports:**
 ```bash
 npm run test:report
 ```
+
+**Mock Configuration:**
+- Mock data is defined in `/config/mock.config.ts`
+- Mocks are activated by setting `USE_MOCKS=1` environment variable
+- Mock files are served from `/public/mocks/*.json` (copied to `/dist/mocks/` during build)
+- All API services check `shouldUseMocks()` before making external calls
 
 ## 🏗️ Pre-Publish Validation
 
