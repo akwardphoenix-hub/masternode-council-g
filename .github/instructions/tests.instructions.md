@@ -401,9 +401,9 @@ export const createMockAuditEntry = (overrides = {}) => ({
 ## Test Coverage Guidelines
 
 ### Minimum Coverage
-- Components: Test all user interactions and state changes
-- Services: Test all public methods and error cases
-- Utilities: Test all input/output variations
+- Components: ≥90% coverage for user interactions and state changes
+- Services: ≥85% coverage for public methods and error cases
+- Utilities: ≥80% coverage for input/output variations
 
 ### Priority Testing Areas
 1. **Critical paths**: Proposal submission, voting, audit logging
