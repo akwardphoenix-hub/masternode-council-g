@@ -45,6 +45,28 @@ export const mockVotes: MockVote[] = [];
 export const mockAuditLog: MockAuditEntry[] = [];
 
 /**
+ * Mock bill data for Congress.gov API responses
+ */
+export const mockBills = [
+  {
+    number: 'HR4763',
+    title: 'Digital Asset Market Structure and Investor Protection Act',
+    sponsor: { name: 'Rep. Johnson' },
+    introducedDate: '2023-07-20',
+    latestAction: { text: 'Referred to the House Committee on Financial Services' },
+    url: 'https://www.congress.gov/bill/118th-congress/house-bill/4763'
+  },
+  {
+    number: 'S2281',
+    title: 'Crypto Asset National Security Enhancement Act',
+    sponsor: { name: 'Sen. Smith' },
+    introducedDate: '2023-07-12',
+    latestAction: { text: 'Read twice and referred to the Committee on Banking' },
+    url: 'https://www.congress.gov/bill/118th-congress/senate-bill/2281'
+  }
+];
+
+/**
  * Mock API responses for testing
  */
 export const mockAPI = {
@@ -58,7 +80,16 @@ export const mockAPI = {
     sponsor: 'Mock Sponsor',
     introducedDate: '2025-01-01',
     latestAction: 'Introduced in House'
-  })
+  }),
+  
+  // Mock fetchBills for congressService
+  fetchBills: (limit = 10) => Promise.resolve(mockBills.slice(0, limit)),
+  
+  // Mock fetchBillById for congressService
+  fetchBillById: (billId: string) => {
+    const bill = mockBills.find(b => billId.includes(b.number.toLowerCase()));
+    return Promise.resolve(bill || mockBills[0]);
+  }
 };
 
 /**
