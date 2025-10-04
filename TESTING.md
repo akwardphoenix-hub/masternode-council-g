@@ -6,6 +6,16 @@ This document describes the comprehensive end-to-end testing suite for the Maste
 
 The testing suite uses [Playwright](https://playwright.dev/) for end-to-end testing, covering all critical user workflows and ensuring the application is production-ready.
 
+### System Chrome Configuration
+
+**Important**: This project is configured to use **system-installed Chrome** instead of downloading Playwright's bundled browsers. This approach:
+- ✅ Avoids network/firewall issues during browser installation
+- ✅ Works reliably in CI environments (GitHub Actions has Chrome pre-installed)
+- ✅ Eliminates the need for `npx playwright install` commands
+- ✅ Reduces setup time and disk space usage
+
+The configuration is in `playwright.config.ts` with `channel: 'chrome'`.
+
 ## Test Structure
 
 Tests are organized in the `e2e/` directory:
@@ -21,30 +31,37 @@ e2e/
 └── 07-build-production.spec.ts    # Production build validation
 ```
 
-## Running Tests
+## Quick Start
 
-### Install Dependencies
+### Prerequisites
 
+This project is configured to use **system-installed Chrome** to avoid network/firewall issues with downloading Playwright browsers.
+
+1. Verify Chrome is installed:
 ```bash
-# Install npm packages
-npm install
-
-# Option 1: Use system Chrome (Recommended - no download needed)
-# Verify Chrome is installed:
-google-chrome --version
-
-# Option 2: Install Playwright browsers (if you prefer)
-npx playwright install chromium
-
-# Note: This project is configured to use system Chrome by default,
-# so you don't need to install Playwright browsers unless you want to.
+google-chrome --version  # Should show Chrome 130+
 ```
 
-### Run All Tests
+2. Install dependencies:
+```bash
+npm install
+```
+
+That's it! No need to download Playwright browsers.
+
+### Running Tests
+
+#### Run All Tests
 
 ```bash
 npm run test:e2e
 ```
+
+**Note**: The test suite is configured to:
+- Use system Chrome browser (no download required)
+- Run tests sequentially in CI for stability
+- Automatically start the dev server on port 5000
+- Retry failed tests 2 times in CI
 
 ### Run Tests with UI
 
@@ -323,15 +340,27 @@ Expected test execution times:
 - Full suite: 3-5 minutes
 - Pre-publish validation: 5-8 minutes
 
+## Test Status
+
+The E2E test suite is fully configured and operational:
+- ✅ Playwright config uses system Chrome (no browser download needed)
+- ✅ Tests run locally without network issues
+- ✅ CI workflow configured for GitHub Actions
+- ✅ Comprehensive test coverage across 7 test suites (50+ tests)
+
+Some tests may fail if they test features not yet implemented in the app. This is expected as the test suite was designed to guide development.
+
 ## Contributing
 
 When adding new features:
 1. Write E2E tests for new functionality
 2. Ensure tests pass locally before submitting PR
 3. Update this documentation with new test coverage
+4. Keep test selectors aligned with actual UI implementation
 
 ## Resources
 
 - [Playwright Documentation](https://playwright.dev/)
 - [Testing Best Practices](https://playwright.dev/docs/best-practices)
 - [Debugging Tests](https://playwright.dev/docs/debug)
+- [Using System Browsers](https://playwright.dev/docs/browsers#google-chrome--microsoft-edge)

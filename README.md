@@ -23,9 +23,8 @@ npm run preview
 ### Testing
 
 ```bash
-# Install test dependencies (first time only)
+# Install dependencies (no browser download needed - uses system Chrome)
 npm install
-npx playwright install chromium
 
 # Run all end-to-end tests
 npm run test:e2e
@@ -36,6 +35,8 @@ npm run test:e2e:ui
 # View test report
 npm run test:report
 ```
+
+**Note**: Tests use system Chrome browser - no Playwright browser installation required!
 
 ## 📋 Features
 
