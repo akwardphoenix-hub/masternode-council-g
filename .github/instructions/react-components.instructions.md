@@ -87,7 +87,9 @@ These instructions apply when editing React components in the `src/components/` 
   ```typescript
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
-    return isNaN(d.getTime()) ? "Invalid Date" : d.toLocaleDateString();
+    return isNaN(d.getTime())
+      ? "Invalid Date"
+      : d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
   };
   ```
 
