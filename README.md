@@ -122,6 +122,7 @@ This validates:
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [TESTING.md](./TESTING.md) - Comprehensive Testing Guide
 - [e2e/README.md](./e2e/README.md) - End-to-End Test Documentation
+- [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) - Common Issues and Solutions
 
 ## 🤝 Contributing
 

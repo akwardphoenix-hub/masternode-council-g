@@ -80,29 +80,32 @@ npm run test:report
 
 ## Troubleshooting
 
-### Playwright Not Installed
+### Quick Fixes
 
+**Playwright Not Installed:**
 ```bash
 npx playwright install chromium
 ```
 
-### Port Already in Use
-
+**Port Already in Use:**
 ```bash
 npm run kill  # Kill process on port 5000
 ```
 
-### Tests Timing Out
-
-Increase timeout in `playwright.config.ts` or individual tests.
-
-### Debugging Failed Tests
-
+**Debugging Failed Tests:**
 ```bash
-# Run with debug mode
-npm run test:e2e:debug
+npm run test:e2e:debug  # Interactive debugging
+npm run test:e2e:headed # See browser
+```
 
-# Or run specific test
+### More Help
+
+For comprehensive troubleshooting guides and solutions to common issues, see:
+- **[TROUBLESHOOTING.md](../TROUBLESHOOTING.md)** - Complete troubleshooting guide
+- **[TESTING.md](../TESTING.md)** - Testing documentation
+
+Or run specific tests to isolate issues:
+```bash
 npx playwright test e2e/01-app-loads.spec.ts --debug
 ```
 
