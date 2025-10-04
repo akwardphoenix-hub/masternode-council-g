@@ -1,0 +1,11 @@
+[
+  {
+    "id": "proposal-001",
+    "title": "Integrate U.S. Digital Asset Bill Context",
+    "description": "Proposal to align masternode governance with the U.S. Digital Asset Bill context via live Congress.gov API.",
+    "author": "node-delta",
+    "status": "active",
+    "createdAt": "2025-10-03T13:00:00Z",
+    "votingEndsAt": "2025-10-10T23:59:59Z"
+  }
+]

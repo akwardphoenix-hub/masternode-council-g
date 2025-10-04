@@ -1,0 +1,14 @@
+name: Copilot Pre-Setup
+steps:
+  - name: Use Node
+    run: |
+      node -v
+      npm -v
+  - name: Install deps
+    run: npm ci
+  - name: Install Playwright browsers
+    run: npx playwright install --with-deps chromium
+  - name: Build app
+    run: npm run build
+  - name: Cache node_modules
+    run: echo "Cache handled by Actions; this is only for Copilot pre-warm."

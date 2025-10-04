@@ -27,11 +27,14 @@ npm run preview
 npm install
 npx playwright install chromium
 
-# Run all end-to-end tests
-npm run test:e2e
+# Build the app (required for E2E tests)
+npm run build
+
+# Run all end-to-end tests (mocked mode)
+USE_MOCKS=1 npm run test:e2e
 
 # Run tests with UI (interactive)
-npm run test:e2e:ui
+USE_MOCKS=1 npm run test:e2e:ui
 
 # View test report
 npm run test:report
@@ -73,6 +76,26 @@ This project includes comprehensive end-to-end tests covering:
 - Accessibility and performance
 
 See [TESTING.md](./TESTING.md) for detailed testing documentation.
+
+### E2E Testing
+
+**Mocked (no network):**
+```bash
+npm ci
+npx playwright install chromium
+npm run build
+USE_MOCKS=1 npm run test:e2e
+```
+
+**Interactive:**
+```bash
+USE_MOCKS=1 npm run test:e2e:ui
+```
+
+**Reports:**
+```bash
+npm run test:report
+```
 
 ## 🏗️ Pre-Publish Validation
 

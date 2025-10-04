@@ -22,4 +22,10 @@ export default defineConfig({
       '@': resolve(projectRoot, 'src')
     }
   },
+  server: {
+    host: '0.0.0.0'
+  },
+  define: {
+    'import.meta.env.VITE_USE_MOCKS': JSON.stringify(process.env.USE_MOCKS || '0')
+  }
 });

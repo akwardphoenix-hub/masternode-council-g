@@ -1,0 +1,14 @@
+[
+  {
+    "proposal_id": "proposal-001",
+    "bill_id": "hr4763-118",
+    "audit_entries": [
+      {
+        "event": "proposal-created",
+        "node_id": "node-delta",
+        "timestamp": "2025-10-03T13:00:00Z",
+        "hash": "0x123abc456def"
+      }
+    ]
+  }
+]

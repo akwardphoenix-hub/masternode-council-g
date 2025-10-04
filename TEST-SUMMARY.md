@@ -138,7 +138,7 @@ This script performs 10 validation steps including:
 
 ### Known Limitations
 - Browser installation required: `npx playwright install chromium`
-- Tests require dev server running on port 5000
+- Tests require dev server running on port 5173
 - Some timing-sensitive tests use reasonable timeouts
 
 ## Performance Benchmarks
