@@ -5,7 +5,7 @@ test.describe('Application Loading and Basic UI', () => {
     await page.goto('/');
     
     // Check that the main title/logo appears
-    await expect(page.getByRole('heading', { name: /council/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /masternode council/i })).toBeVisible({ timeout: 10000 });
   });
 
   test('should display the main dashboard components', async ({ page }) => {
