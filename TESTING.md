@@ -301,7 +301,10 @@ npx playwright test --timeout=60000
 ```bash
 # Kill existing process on port 5000 (the dev server port)
 npm run kill
-# Or manually: fuser -k 5000/tcp
+# Or manually (cross-platform): npx kill-port 5000
+# Or on Linux: fuser -k 5000/tcp
+# Or on macOS: lsof -ti tcp:5000 | xargs kill
+# Or on Windows (PowerShell): Stop-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess
 ```
 
 ### Headless vs Headed Mode
