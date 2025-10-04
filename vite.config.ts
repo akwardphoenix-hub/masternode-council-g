@@ -22,4 +22,16 @@ export default defineConfig({
       '@': resolve(projectRoot, 'src')
     }
   },
+  server: {
+    // Allow connections to external domains in allowlist
+    cors: true,
+  },
+  build: {
+    // Ensure external resources are not bundled
+    rollupOptions: {
+      external: [
+        /^https?:\/\//  // Keep all external URLs as-is
+      ]
+    }
+  }
 });
