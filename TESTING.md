@@ -26,8 +26,18 @@ e2e/
 ### Install Dependencies
 
 ```bash
+# Install npm packages
 npm install
+
+# Option 1: Use system Chrome (Recommended - no download needed)
+# Verify Chrome is installed:
+google-chrome --version
+
+# Option 2: Install Playwright browsers (if you prefer)
 npx playwright install chromium
+
+# Note: This project is configured to use system Chrome by default,
+# so you don't need to install Playwright browsers unless you want to.
 ```
 
 ### Run All Tests
@@ -148,28 +158,62 @@ This script performs:
 
 ## Continuous Integration
 
-Add to your CI/CD pipeline:
+### Using System Chrome (Recommended)
+
+This project is configured to use system-installed Chrome, avoiding browser download issues:
 
 ```yaml
 - name: Install dependencies
   run: npm ci
 
-- name: Install Playwright
-  run: npx playwright install chromium --with-deps
+- name: Install Chrome dependencies (optional)
+  run: npx playwright install-deps chromium
 
-- name: Build
-  run: npm run build
+- name: Verify Chrome
+  run: google-chrome --version
+
+- name: Run E2E tests
+  run: npm run test:e2e
+  env:
+    CI: true
+
+- name: Upload test report
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: playwright-report
+    path: playwright-report/
+```
+
+### Traditional Playwright Browser Download (Alternative)
+
+If you want to use Playwright's bundled browsers instead of system Chrome:
+
+```yaml
+- name: Install dependencies
+  run: npm ci
+
+- name: Cache Playwright browsers
+  uses: actions/cache@v4
+  with:
+    path: ~/.cache/ms-playwright
+    key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+
+- name: Install Playwright browsers
+  run: npx playwright install chromium --with-deps
 
 - name: Run E2E tests
   run: npm run test:e2e
 
 - name: Upload test report
   if: always()
-  uses: actions/upload-artifact@v3
+  uses: actions/upload-artifact@v4
   with:
     name: playwright-report
     path: playwright-report/
 ```
+
+**Note**: The first approach (system Chrome) is more reliable in restricted network environments.
 
 ## Test Data Management
 
@@ -182,10 +226,46 @@ Tests use the Spark KV storage system which persists data across sessions. To re
 
 ### Tests Fail to Start
 
+**Issue**: Playwright browsers not installed or download fails
+
+**Solution**:
 ```bash
-# Reinstall Playwright browsers
+# Try installing Playwright browsers
 npx playwright install chromium --with-deps
+
+# If download fails due to network/firewall issues:
+# The configuration is already set to use system Chrome as fallback
+# Verify Chrome is available:
+google-chrome --version
+
+# If Chrome is installed, tests should work automatically
+# The playwright.config.ts uses channel: 'chrome' to use system Chrome
 ```
+
+### Browser Download Failures (Network/Firewall Issues)
+
+**Issue**: `EPIPE`, `Download failed`, or timeout errors during `npx playwright install`
+
+**Solutions**:
+1. **Use System Chrome** (Default in this project):
+   - The `playwright.config.ts` is already configured to use system Chrome
+   - No manual Playwright browser installation needed
+   - Just ensure Chrome/Chromium is installed on your system
+
+2. **Manual Chrome Installation** (if needed):
+   ```bash
+   # Ubuntu/Debian
+   sudo apt-get update
+   sudo apt-get install google-chrome-stable
+   
+   # Or use Chromium
+   sudo apt-get install chromium-browser
+   ```
+
+3. **For CI Environments**:
+   - GitHub Actions runners have Chrome pre-installed
+   - The `.github/workflows/test.yml` uses system Chrome automatically
+   - No special configuration needed
 
 ### Timeout Issues
 
@@ -194,12 +274,17 @@ Increase timeout in `playwright.config.ts`:
 timeout: 30000 // 30 seconds
 ```
 
+Or run individual tests with custom timeout:
+```bash
+npx playwright test --timeout=60000
+```
+
 ### Port Already in Use
 
 ```bash
-# Kill existing process on port 5173
+# Kill existing process on port 5000 (the dev server port)
 npm run kill
-# Or manually: fuser -k 5173/tcp
+# Or manually: fuser -k 5000/tcp
 ```
 
 ### Headless vs Headed Mode
@@ -207,6 +292,19 @@ npm run kill
 For debugging, always use headed mode to see what's happening:
 ```bash
 npm run test:e2e:headed
+```
+
+### Debugging Specific Test Failures
+
+```bash
+# Run a specific test file
+npx playwright test e2e/01-app-loads.spec.ts
+
+# Run with debug mode
+npx playwright test --debug
+
+# View trace of a failed test
+npx playwright show-trace test-results/[test-name]/trace.zip
 ```
 
 ## Best Practices

@@ -4,8 +4,8 @@ test.describe('Application Loading and Basic UI', () => {
   test('should load the application successfully', async ({ page }) => {
     await page.goto('/');
     
-    // Check that the main title/logo appears
-    await expect(page.getByRole('heading', { name: /council/i })).toBeVisible({ timeout: 10000 });
+    // Check that the main title/logo appears - use first() to handle multiple matches
+    await expect(page.getByRole('heading', { name: /council/i }).first()).toBeVisible({ timeout: 10000 });
   });
 
   test('should display the main dashboard components', async ({ page }) => {
@@ -14,10 +14,10 @@ test.describe('Application Loading and Basic UI', () => {
     // Wait for app to load
     await page.waitForLoadState('networkidle');
     
-    // Check for dashboard cards - proposals, votes, audit entries
-    await expect(page.getByText(/proposals/i)).toBeVisible();
-    await expect(page.getByText(/votes/i)).toBeVisible();
-    await expect(page.getByText(/audit/i)).toBeVisible();
+    // Check for dashboard cards - proposals, votes, audit entries (use first() for multiple matches)
+    await expect(page.getByText(/proposals/i).first()).toBeVisible();
+    await expect(page.getByText(/votes/i).first()).toBeVisible();
+    await expect(page.getByText(/audit/i).first()).toBeVisible();
   });
 
   test('should display navigation tabs', async ({ page }) => {

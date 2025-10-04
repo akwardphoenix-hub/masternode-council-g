@@ -22,29 +22,26 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Chromium browser (if not cached)
-        run: npx playwright install chromium --with-deps
+      - name: Install system dependencies for Chrome
+        run: |
+          # Install dependencies for Chrome (but not the Playwright-specific browser)
+          # This uses system Chrome which is already available on GitHub Actions runners
+          npx playwright install-deps chromium || echo "Dependencies may already be installed"
 
-      - name: Build project
+      - name: Verify Chrome is available
+        run: |
+          google-chrome --version || chromium --version || echo "Chrome not found, tests may fail"
+
+      - name: Build project (if build script exists)
         run: npm run build --if-present
 
-      - name: Run E2E tests (parallel + retries + per-test timeout)
-        run: |
-          npx playwright test \
-            --workers=4 \
-            --retries=2 \
-            --reporter=html,line \
-            --timeout=30000
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          CI: true
 
       - name: Upload HTML report
         if: always()
