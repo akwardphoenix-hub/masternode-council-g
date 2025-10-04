@@ -12,6 +12,40 @@ This template is your blank canvas. It comes with a minimal setup to help you ge
 
 Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
 
+## 🧪 Testing
+
+This project includes E2E testing with Playwright.
+
+### Running Tests
+
+```bash
+# Run all E2E tests
+npm run test:e2e
+
+# Run tests in headed mode (see browser)
+npm run test:e2e:headed
+
+# Run tests with list reporter (CI format)
+npm run test:e2e:ci
+
+# View test report
+npm run test:e2e:report
+```
+
+### How It Works
+
+The Playwright configuration automatically:
+- Starts the Vite dev server before tests run
+- Waits for the server to be ready on `http://localhost:5173`
+- Runs tests across Chromium, Firefox, and WebKit browsers
+- Stops the server after tests complete
+
+In CI, the workflow will:
+1. Install dependencies
+2. Install Playwright browsers with system dependencies
+3. Run tests (server starts automatically via `webServer` config)
+4. Report results
+
 🧹 Just Exploring?
 No problem! If you were just checking things out and don’t need to keep this code:
 
