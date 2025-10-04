@@ -22,4 +22,10 @@ export default defineConfig({
       '@': resolve(projectRoot, 'src')
     }
   },
+  server: {
+    port: 5173,
+  },
+  preview: {
+    port: 5173,
+  },
 });

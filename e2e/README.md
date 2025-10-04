@@ -79,7 +79,7 @@ npx playwright install chromium
 ### Port Already in Use
 
 ```bash
-npm run kill  # Kill process on port 5000
+npm run kill  # Kill process on port 5173
 ```
 
 ### Tests Timing Out

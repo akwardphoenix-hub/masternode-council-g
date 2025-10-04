@@ -197,21 +197,21 @@ timeout: 30000 // 30 seconds
 ### Port Already in Use
 
 ```bash
-# Kill existing process on port 5000
+# Kill existing process on port 5173
 npm run kill
 
 # Cross-platform alternatives:
 # Using npx (works on all platforms):
-npx kill-port 5000
+npx kill-port 5173
 
 # Linux:
-fuser -k 5000/tcp
+fuser -k 5173/tcp
 
 # macOS:
-lsof -ti tcp:5000 | xargs kill
+lsof -ti tcp:5173 | xargs kill
 
 # Windows (PowerShell):
-Stop-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess -Force
+Stop-Process -Id (Get-NetTCPConnection -LocalPort 5173).OwningProcess -Force
 ```
 
 ### Headless vs Headed Mode
