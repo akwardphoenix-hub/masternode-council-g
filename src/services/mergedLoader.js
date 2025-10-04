@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
-import { loadCouncilData } from "./services/mergedLoader";
+// mergedLoader.js - Service for loading council data
+import councilProposals from "../data/council-proposals.json";
+import councilData from "../data/council.json";
+import auditLog from "../data/audit-log.json";
 
-function Dashboard() {
-  const [data, setData] = useState({ proposals: [], votes: [], auditLog: [] });
+export async function loadCouncilData() {
+  // Merge data from different JSON files
+  const proposals = councilProposals || [];
+  const votes = councilData["council-votes"] || [];
+  const audit = auditLog || [];
 
-  useEffect(() => {
-    loadCouncilData().then(setData);
-  }, []);
-
-  return (
-    <div>
-      <h1>Masternode Council</h1>
-      <p>Total Proposals: {data.proposals.length}</p>
-      <p>Total Votes: {data.votes.length}</p>
-      <p>Audit Entries: {data.auditLog.length}</p>
-    </div>
-  );
+  return {
+    proposals,
+    votes,
+    auditLog: audit
+  };
 }
-
-export default Dashboard;
