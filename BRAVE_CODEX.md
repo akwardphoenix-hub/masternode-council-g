@@ -13,7 +13,7 @@ The system seeks harmonic balance across all governance operations. This means:
 - **Vote Distribution**: Approve, Reject, and Abstain votes all contribute to the harmonic whole
 - **Node Equality**: Every node's voice carries equal weight in the decision-making process
 - **Consensus Building**: Decisions emerge from the collective wisdom of the council, not individual dominance
-- **Balanced Outcomes**: The system strives for resolutions that respect minority positions while honoring majority will
+- **Balanced Outcomes**: The system strives for resolutions that respect minority positions while honouring majority will
 
 #### Harmonic Formula
 ```
