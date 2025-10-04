@@ -4,11 +4,14 @@ steps:
     run: |
       node -v
       npm -v
-  - name: Install deps
+  - name: Install dependencies
     run: npm ci
   - name: Install Playwright browsers
-    run: npx playwright install --with-deps chromium
-  - name: Build app
+    run: npx playwright install chromium
+  - name: Build app for testing
     run: npm run build
+    env:
+      USE_MOCKS: '1'
+      NODE_ENV: 'test'
   - name: Cache node_modules
     run: echo "Cache handled by Actions; this is only for Copilot pre-warm."

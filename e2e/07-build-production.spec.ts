@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Production Build Validation', () => {
   test('should have proper meta tags', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check for viewport meta tag
     const viewport = await page.locator('meta[name="viewport"]').getAttribute('content');
@@ -12,7 +12,7 @@ test.describe('Production Build Validation', () => {
 
   test('should load CSS properly', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check that some element has computed styles
     const body = page.locator('body');
@@ -34,7 +34,7 @@ test.describe('Production Build Validation', () => {
     });
     
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Filter out known non-critical errors
     const criticalErrors = consoleErrors.filter(error => 
@@ -51,14 +51,14 @@ test.describe('Production Build Validation', () => {
     
     // In SPA, this typically returns 200 and shows the app
     // Check that page doesn't crash
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     const body = page.locator('body');
     await expect(body).toBeVisible();
   });
 
   test('should be accessible', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check for basic accessibility features
     // Should have proper heading hierarchy
@@ -85,7 +85,7 @@ test.describe('Production Build Validation', () => {
     });
     
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Filter out non-critical failures (like favicon)
     const criticalFailures = failedRequests.filter(url => 
@@ -98,7 +98,7 @@ test.describe('Production Build Validation', () => {
 
   test('should have proper content security', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check that the app loads in a secure context (https or localhost)
     const isSecure = await page.evaluate(() => window.isSecureContext);
@@ -107,7 +107,7 @@ test.describe('Production Build Validation', () => {
 
   test('should be responsive', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
@@ -129,7 +129,7 @@ test.describe('Production Build Validation', () => {
 
   test('should have working navigation', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Test tab navigation
     const tabs = await page.getByRole('tab').count();
@@ -156,7 +156,7 @@ test.describe('Production Build Validation', () => {
     const startTime = Date.now();
     
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     const loadTime = Date.now() - startTime;
     

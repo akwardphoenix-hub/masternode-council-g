@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Voting System', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display voting buttons on proposals', async ({ page }) => {

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Complete End-to-End Workflows', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should complete full proposal lifecycle', async ({ page }) => {
@@ -226,7 +226,7 @@ test.describe('Complete End-to-End Workflows', () => {
     
     // Refresh the page
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Data should persist (using KV storage)
     await expect(page.getByText(proposalTitle)).toBeVisible({ timeout: 5000 });

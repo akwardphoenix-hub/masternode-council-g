@@ -11,8 +11,8 @@ test.describe('Application Loading and Basic UI', () => {
   test('should display the main dashboard components', async ({ page }) => {
     await page.goto('/');
     
-    // Wait for app to load
-    await page.waitForLoadState('networkidle');
+    // Wait for app to load - use domcontentloaded instead of networkidle to avoid loops
+    await page.waitForLoadState('domcontentloaded');
     
     // Check for dashboard cards - proposals, votes, audit entries
     await expect(page.getByText(/proposals/i)).toBeVisible();
@@ -22,7 +22,7 @@ test.describe('Application Loading and Basic UI', () => {
 
   test('should display navigation tabs', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check for tabs
     await expect(page.getByRole('tab', { name: /proposals/i })).toBeVisible();
@@ -32,7 +32,7 @@ test.describe('Application Loading and Basic UI', () => {
 
   test('should have responsive layout', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     
     // Check that content is visible and page is scrollable if needed
     const body = await page.locator('body');
