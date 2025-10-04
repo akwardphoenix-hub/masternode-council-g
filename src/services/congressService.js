@@ -1,6 +1,6 @@
 // src/services/congressService.js
 // Service layer for fetching data from Congress.gov API
-import { shouldUseMocks, mockAPI } from '../../config/mock.config';
+import { shouldUseMocks, mockAPI } from '../config/mock.config';
 
 const BASE_URL = "https://api.congress.gov/v3";
 const API_KEY = import.meta.env.VITE_CONGRESS_API_KEY; // keep your key in .env
