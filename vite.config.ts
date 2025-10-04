@@ -15,7 +15,7 @@ export default defineConfig({
     tailwindcss(),
     // DO NOT REMOVE
     createIconImportProxy() as PluginOption,
-    sparkPlugin({ port: 5173 }) as PluginOption,
+    sparkPlugin() as PluginOption,
   ],
   resolve: {
     alias: {
@@ -23,9 +23,9 @@ export default defineConfig({
     }
   },
   server: {
-    port: 5173,
+    host: '0.0.0.0'
   },
-  preview: {
-    port: 5173,
-  },
+  define: {
+    'import.meta.env.VITE_USE_MOCKS': JSON.stringify(process.env.USE_MOCKS || '0')
+  }
 });

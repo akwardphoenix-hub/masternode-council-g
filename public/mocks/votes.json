@@ -1,0 +1,19 @@
+[
+  {
+    "proposal_id": "proposal-001",
+    "bill_id": "hr4763-118",
+    "votes": [
+      {
+        "voter_id": "node-alpha",
+        "vote": "yes",
+        "timestamp": "2025-10-03T13:05:00Z",
+        "signature": "0xabc123def456"
+      }
+    ],
+    "quorum": {
+      "required": 2,
+      "current": 1,
+      "reached": false
+    }
+  }
+]
