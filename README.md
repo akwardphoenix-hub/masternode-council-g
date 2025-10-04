@@ -163,6 +163,7 @@ This validates:
 
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [TESTING.md](./TESTING.md) - Comprehensive Testing Guide
+- [OFFLINE-TESTING.md](./OFFLINE-TESTING.md) - **Offline Testing Guide (No External Network Required)**
 - [e2e/README.md](./e2e/README.md) - End-to-End Test Documentation
 
 ## 🤝 Contributing
