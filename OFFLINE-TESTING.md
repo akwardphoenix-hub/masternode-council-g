@@ -210,6 +210,35 @@ export async function fetchNewData() {
 
 ## Validation
 
+### Verify No External Network Calls
+
+To ensure your changes work completely offline:
+
+1. **Build with mocks**:
+   ```bash
+   USE_MOCKS=1 npm run build
+   ```
+
+2. **Check console output** - should show no external URLs being fetched
+
+3. **Run tests with mocks**:
+   ```bash
+   USE_MOCKS=1 npm run test:e2e
+   ```
+
+4. **Monitor network** (optional) - all requests should be to localhost only
+
+### Services Covered by Mocks
+
+All these services respect `USE_MOCKS=1`:
+
+- ✅ `congressApi.js` - Congress.gov bill data
+- ✅ `congressService.js` - Congress.gov bills listing
+- ✅ `mergedLoader.js` - Local council data
+- ✅ `mockServer.ts` - Static file fetching
+
+### Pre-Publish Validation
+
 Run the pre-publish check script to validate everything:
 
 ```bash
