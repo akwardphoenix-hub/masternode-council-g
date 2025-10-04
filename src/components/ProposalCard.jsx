@@ -2,7 +2,7 @@
 // Expand props and Congress.gov fields as needed
 import React from "react";
 
-export default function ProposalCard({ proposal, billMeta }) {
+export default function ProposalCard({ proposal, onVote }) {
   // Format date safely
   const formatDate = (dateStr) => {
     const d = new Date(dateStr);
@@ -12,18 +12,33 @@ export default function ProposalCard({ proposal, billMeta }) {
   return (
     <div className="border rounded-lg p-4 bg-white shadow mb-4">
       <h3 className="text-lg font-bold mb-1">{proposal.title}</h3>
-      <div className="text-sm text-gray-600 mb-2">By {proposal.author} | Submitted: {formatDate(proposal.date_submitted)}</div>
-      <div className="mb-2">Status: <span className="font-semibold">{proposal.status}</span></div>
-      <div className="mb-2">
-        <span className="font-semibold">Congress.gov Bill:</span> <a href={proposal.bill.api_endpoint} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{proposal.bill.billType.toUpperCase()} {proposal.bill.billNumber} ({proposal.bill.congress})</a>
-      </div>
-      {/* Congress.gov Metadata */}
-      <div className="bg-gray-50 p-2 rounded">
-        <div><span className="font-semibold">Title:</span> {billMeta?.title || "N/A"}</div>
-        <div><span className="font-semibold">Sponsor:</span> {billMeta?.sponsor || "N/A"}</div>
-        <div><span className="font-semibold">Introduced:</span> {formatDate(billMeta?.introducedDate)}</div>
-        <div><span className="font-semibold">Latest Action:</span> {billMeta?.latestAction || "N/A"}</div>
-      </div>
+      <p className="text-gray-700 mb-2">{proposal.description}</p>
+      <p className="text-sm text-gray-600 mb-1"><strong>Author:</strong> {proposal.author}</p>
+      <p className="text-sm text-gray-600 mb-1"><strong>Status:</strong> {proposal.status}</p>
+      <p className="text-sm text-gray-600 mb-3"><strong>Created:</strong> {formatDate(proposal.createdAt)}</p>
+
+      {onVote && (
+        <div className="flex gap-2 mt-4">
+          <button 
+            onClick={() => onVote(proposal.id, 'approve')}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+          >
+            ✅ Approve
+          </button>
+          <button 
+            onClick={() => onVote(proposal.id, 'reject')}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+          >
+            ❌ Reject
+          </button>
+          <button 
+            onClick={() => onVote(proposal.id, 'abstain')}
+            className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 transition"
+          >
+            ⚪ Abstain
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,17 +1,13 @@
 {
   "council-proposals": [
     {
-      "proposal_id": "proposal-001",
+      "id": "proposal-001",
       "title": "Integrate U.S. Digital Asset Bill Context",
+      "description": "Proposal to align masternode governance with the U.S. Digital Asset Bill context via live Congress.gov API.",
       "author": "node-delta",
-      "date_submitted": "2025-10-03",
       "status": "active",
-      "bill": {
-        "congress": "118",
-        "billType": "hr",
-        "billNumber": "4763",
-        "api_endpoint": "https://api.congress.gov/v3/bill/118/hr/4763"
-      }
+      "createdAt": "2025-10-03T09:55:00Z",
+      "votingEndsAt": "2025-10-10T23:59:59Z"
     }
   ],
   "council-votes": [

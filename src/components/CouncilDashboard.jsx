@@ -12,22 +12,17 @@ const TABS = ["Proposals", "Votes", "Audit Log"];
 export default function CouncilDashboard() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [proposals, setProposals] = useState([]);
-  const [billMeta, setBillMeta] = useState({});
+  const [votes, setVotes] = useState([]);
+  const [auditLog, setAuditLog] = useState([]);
 
   useEffect(() => {
-    // Load proposals and fetch Congress.gov metadata
-    async function loadProposals() {
-      const propList = councilData["council-proposals"] || [];
-      setProposals(propList);
-      // Fetch bill metadata for each proposal
-      const meta = {};
-      for (const p of propList) {
-        const bill = p.bill;
-        meta[p.proposal_id] = await fetchBillData(bill.congress, bill.billType, bill.billNumber, API_KEY);
-      }
-      setBillMeta(meta);
-    }
-    loadProposals();
+    // Load proposals
+    const propList = councilData["council-proposals"] || [];
+    setProposals(propList);
+    
+    // Load votes and audit log
+    setVotes(councilData["council-votes"] || []);
+    setAuditLog(councilData["audit-log"] || []);
   }, []);
 
   // Helper: Format date safely
@@ -36,15 +31,36 @@ export default function CouncilDashboard() {
     return isNaN(d.getTime()) ? "Invalid Date" : d.toLocaleString();
   };
 
+  // Handle vote casting
+  const handleVote = (proposalId, vote) => {
+    const newVote = {
+      proposalId,
+      voter: "node-alpha", // replace with real user context later
+      vote,
+      timestamp: new Date().toISOString()
+    };
+
+    // Update votes
+    setVotes(prev => [...prev, newVote]);
+
+    // Update audit log
+    const newAuditEntry = {
+      logId: `log-${Date.now()}`,
+      action: "vote_cast",
+      actor: "node-alpha",
+      proposalId,
+      timestamp: new Date().toISOString(),
+      details: `Vote recorded as ${vote.toUpperCase()}`
+    };
+    setAuditLog(prev => [...prev, newAuditEntry]);
+  };
+
   // Votes stance counts
-  const votes = councilData["council-votes"]?.[0]?.votes || [];
-  const stanceCounts = votes.reduce((acc, v) => {
+  const allVotes = votes.flatMap(v => v.votes || []);
+  const stanceCounts = allVotes.reduce((acc, v) => {
     acc[v.stance] = (acc[v.stance] || 0) + 1;
     return acc;
   }, {});
-
-  // Audit log events
-  const auditLog = councilData["audit-log"] || [];
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -65,7 +81,7 @@ export default function CouncilDashboard() {
       {activeTab === "Proposals" && (
         <div>
           {proposals.map(p => (
-            <ProposalCard key={p.proposal_id} proposal={p} billMeta={billMeta[p.proposal_id]} />
+            <ProposalCard key={p.id} proposal={p} onVote={handleVote} />
           ))}
         </div>
       )}
@@ -82,8 +98,8 @@ export default function CouncilDashboard() {
           <div className="mt-4">
             <h3 className="font-semibold mb-1">Vote Details</h3>
             <ul>
-              {votes.map(v => (
-                <li key={v.node} className="text-sm text-gray-700">
+              {allVotes.map((v, i) => (
+                <li key={i} className="text-sm text-gray-700">
                   {v.node}: <span className="capitalize">{v.stance}</span> @ {formatDate(v.timestamp)}
                 </li>
               ))}
