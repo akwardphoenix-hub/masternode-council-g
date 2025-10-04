@@ -19,6 +19,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium
       - name: Build
+        env:
+          USE_MOCKS: '1'
         run: npm run build
       - name: Run E2E tests (offline with mocks)
         env:

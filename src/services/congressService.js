@@ -1,11 +1,17 @@
 // src/services/congressService.js
 // Service layer for fetching data from Congress.gov API
+import { shouldUseMocks, mockAPI } from '../../config/mock.config';
 
 const BASE_URL = "https://api.congress.gov/v3";
 const API_KEY = import.meta.env.VITE_CONGRESS_API_KEY; // keep your key in .env
 
 // Fetch bills
 export async function fetchBills(limit = 10) {
+  // Use mock data in test/offline mode
+  if (shouldUseMocks()) {
+    return mockAPI.fetchBills(limit);
+  }
+  
   try {
     const response = await fetch(`${BASE_URL}/bill?api_key=${API_KEY}&limit=${limit}`);
     if (!response.ok) throw new Error("Failed to fetch bills");
@@ -19,6 +25,11 @@ export async function fetchBills(limit = 10) {
 
 // Fetch a single bill by ID
 export async function fetchBillById(billId) {
+  // Use mock data in test/offline mode
+  if (shouldUseMocks()) {
+    return mockAPI.fetchBillById(billId);
+  }
+  
   try {
     const response = await fetch(`${BASE_URL}/bill/${billId}?api_key=${API_KEY}`);
     if (!response.ok) throw new Error("Failed to fetch bill details");

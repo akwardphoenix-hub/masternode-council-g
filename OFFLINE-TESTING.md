@@ -9,21 +9,23 @@ All E2E tests run against the built `/dist` folder using mocked data, eliminatin
 - Live development servers
 - Network connectivity during test execution
 
-## Quick Start
+## Quick Start - Always Offline
 
-### 1. Install Dependencies (requires network)
+**All commands use `USE_MOCKS=1` for fully offline operation:**
+
+### 1. Install Dependencies (one-time, requires network)
 
 ```bash
 npm ci
 npx playwright install chromium
 ```
 
-> **Note**: Playwright browser installation requires network access. This is a one-time setup that should be done during CI setup or local environment initialization.
+> **Note**: This is the only step requiring network access. After installation, all development and testing is fully offline.
 
-### 2. Build the Application
+### 2. Build the Application (offline)
 
 ```bash
-npm run build
+USE_MOCKS=1 npm run build
 ```
 
 This creates the `/dist` folder with:
@@ -31,7 +33,7 @@ This creates the `/dist` folder with:
 - Mock data files from `/public/mocks/` → `/dist/mocks/`
 - All static assets
 
-### 3. Run Tests Offline
+### 3. Run Tests (offline)
 
 ```bash
 USE_MOCKS=1 npm run test:e2e
@@ -42,6 +44,14 @@ Or for CI environments:
 ```bash
 USE_MOCKS=1 npm run test:ci
 ```
+
+### 4. Preview Build (offline)
+
+```bash
+USE_MOCKS=1 npm run preview
+```
+
+**Key Point**: Always prefix commands with `USE_MOCKS=1` to ensure fully offline operation with no external network calls.
 
 ## How It Works
 

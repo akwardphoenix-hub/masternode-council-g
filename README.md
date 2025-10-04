@@ -22,23 +22,32 @@ npm run preview
 
 ### Testing
 
-All E2E tests run **offline** using mocked data - no external network calls required.
+All E2E tests run **fully offline** using mocked data - zero external network calls required.
+
+#### Quick Start (Always Offline)
 
 ```bash
-# Install test dependencies (first time only)
+# 1. Install dependencies (one-time, requires network)
 npm install
 npx playwright install chromium
 
-# Build the app (required for E2E tests)
-npm run build
+# 2. Build with mocks (offline)
+USE_MOCKS=1 npm run build
 
-# Run all end-to-end tests (offline mode with mocks)
+# 3. Run E2E tests (offline)
+USE_MOCKS=1 npm run test:e2e
+```
+
+#### All Test Commands (Always use `USE_MOCKS=1`)
+
+```bash
+# Run all E2E tests (offline)
 USE_MOCKS=1 npm run test:e2e
 
-# Run tests for CI (dot reporter)
+# Run tests for CI with dot reporter (offline)
 USE_MOCKS=1 npm run test:ci
 
-# Run tests with UI (interactive)
+# Run tests with interactive UI (offline)
 USE_MOCKS=1 npm run test:ui
 
 # View test report
@@ -46,10 +55,12 @@ npm run test:report
 ```
 
 **Testing Approach:**
+- **Always offline**: Set `USE_MOCKS=1` for all builds and tests
 - Tests run against the built `/dist` folder (not dev server)
 - All external API calls are mocked via `/config/mock.config.ts`
-- No network requests to esm.ubuntu.com, api.github.com, or external services
+- Zero network requests to Congress.gov, GitHub API, or any external services
 - Tests use `domcontentloaded` instead of `networkidle` to prevent loops
+- Works perfectly behind firewalls after initial setup
 
 ## 📋 Features
 
