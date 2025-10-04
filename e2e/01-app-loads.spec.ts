@@ -15,9 +15,9 @@ test.describe('Application Loading and Basic UI', () => {
     await page.waitForLoadState('networkidle');
     
     // Check for dashboard cards - proposals, votes, audit entries
-    await expect(page.getByText(/proposals/i)).toBeVisible();
-    await expect(page.getByText(/votes/i)).toBeVisible();
-    await expect(page.getByText(/audit/i)).toBeVisible();
+    await expect(page.getByText(/total proposals/i)).toBeVisible();
+    await expect(page.getByText(/total votes/i)).toBeVisible();
+    await expect(page.getByText(/audit entries/i)).toBeVisible();
   });
 
   test('should display navigation tabs', async ({ page }) => {
