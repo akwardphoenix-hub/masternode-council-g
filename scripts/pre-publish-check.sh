@@ -144,18 +144,16 @@ if [ -f "dist/index.html" ]; then
 fi
 echo ""
 
-echo "Step 9: Running end-to-end tests..."
-# Try to install Playwright browsers without system dependencies first
-if npx playwright install chromium > /tmp/playwright-install.log 2>&1; then
+echo "Step 9: Installing Playwright browsers..."
+if ./scripts/install-playwright-browsers.sh > /tmp/playwright-install.log 2>&1; then
     echo -e "${GREEN}✓ Playwright browsers installed${NC}"
-elif npx playwright install chromium --with-deps > /tmp/playwright-install.log 2>&1; then
-    echo -e "${GREEN}✓ Playwright browsers installed (with system deps)${NC}"
 else
-    echo -e "${YELLOW}⚠ Could not install Playwright browsers automatically${NC}"
-    echo "  You can install manually with: npx playwright install chromium"
-    echo "  Attempting to run tests anyway..."
+    echo -e "${YELLOW}⚠ Browser installation had issues, attempting to continue${NC}"
+    tail -n 5 /tmp/playwright-install.log
 fi
+echo ""
 
+echo "Step 10: Running end-to-end tests..."
 if npm run test:e2e > /tmp/e2e-tests.log 2>&1; then
     echo -e "${GREEN}✓ All E2E tests passed${NC}"
     
@@ -171,7 +169,7 @@ else
 fi
 echo ""
 
-echo "Step 10: Final checklist..."
+echo "Step 11: Final checklist..."
 echo "  • README.md present: $([ -f README.md ] && echo '✓' || echo '✗')"
 echo "  • LICENSE present: $([ -f LICENSE ] && echo '✓' || echo '✗')"
 echo "  • package.json present: $([ -f package.json ] && echo '✓' || echo '✗')"

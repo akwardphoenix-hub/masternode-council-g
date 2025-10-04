@@ -1,8 +1,16 @@
 import { defineConfig, devices } from '@playwright/test';
+import { join } from 'path';
+import { homedir } from 'os';
+import { existsSync } from 'fs';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+// Try to find manually downloaded chromium browser
+const chromiumPath = join(homedir(), '.cache', 'ms-playwright', 'chromium-1193', 'chrome-linux', 'chrome');
+const useManualChromium = existsSync(chromiumPath);
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -18,7 +26,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        launchOptions: useManualChromium ? {
+          // Use manually downloaded chromium if headless shell is not available
+          executablePath: chromiumPath,
+        } : undefined,
+      },
     },
   ],
 
