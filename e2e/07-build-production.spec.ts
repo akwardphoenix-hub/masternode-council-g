@@ -17,10 +17,13 @@ test.describe('Production Build', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     
-    // Filter out known acceptable errors
-    const criticalErrors = errors.filter(err => 
-      !err.includes('favicon') && 
-      !err.includes('404')
+    // Filter out known acceptable errors using regular expressions
+    const knownErrorPatterns = [
+      /favicon.*404/i, // favicon not found
+      /Failed to load resource: the server responded with a status of 404/i,
+    ];
+    const criticalErrors = errors.filter(err =>
+      !knownErrorPatterns.some(pattern => pattern.test(err))
     );
     
     expect(criticalErrors.length).toBe(0);
