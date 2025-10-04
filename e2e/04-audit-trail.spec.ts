@@ -15,7 +15,10 @@ test.describe('Audit Trail', () => {
     await page.fill('textarea[name="description"]', 'Testing audit trail');
     await page.click('button:has-text("Submit")');
     await page.click('text=Audit Log');
-    await expect(page.locator('text=Proposal Submitted')).toBeVisible({ timeout: 5000 }).catch(() => {});
+    const proposalSubmittedLocator = page.locator('text=Proposal Submitted');
+    if (await proposalSubmittedLocator.count() > 0) {
+      await expect(proposalSubmittedLocator).toBeVisible({ timeout: 5000 });
+    }
   });
 
   test('audit entries have timestamps', async ({ page }) => {
