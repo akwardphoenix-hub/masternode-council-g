@@ -166,7 +166,7 @@ When participating in governance under the Brave Codex:
 ```typescript
 function submitProposal(title: string, description: string, author: string) {
   // 1. Validate input (Repair-first)
-  if (!title || !description || !author) {
+  if (!title.trim() || !description.trim() || !author.trim()) {
     throw new ValidationError('All fields required');
   }
   
