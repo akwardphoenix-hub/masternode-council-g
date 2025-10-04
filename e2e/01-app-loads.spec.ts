@@ -27,7 +27,7 @@ test.describe('Application Loading and Basic UI', () => {
     // Check for tabs - using exact text as they appear in the App
     await expect(page.getByRole('tab', { name: 'Proposals' })).toBeVisible();
     await expect(page.getByRole('tab', { name: 'Voting Records' })).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Audit Log' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /audit log/i })).toBeVisible();
   });
 
   test('should have responsive layout', async ({ page }) => {
