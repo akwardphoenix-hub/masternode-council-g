@@ -1,4 +1,5 @@
 name: e2e
+
 on:
   push:
     branches: [ main ]
@@ -8,13 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Use Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -27,16 +26,16 @@ jobs:
         run: npm run build
 
   e2e:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     # Only run E2E tests when 'run-e2e' label is present
     if: contains(github.event.pull_request.labels.*.name, 'run-e2e')
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Use Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -45,15 +44,25 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      # Avoid apt/ESM hits that get firewall-blocked. Only fetch Chromium.
-      - name: Install Playwright browsers
-        run: npx playwright install chromium
+      - name: Install Playwright (Chromium) + system deps
+        run: npx playwright install --with-deps chromium
 
       - name: Build app
+        env:
+          VITE_USE_MOCK_DATA: '1'
         run: npm run build
 
-      - name: Run E2E
-        run: npx playwright test
+      - name: Start preview server
+        run: |
+          npx vite preview --port 4173 --strictPort &> /dev/null &
+          npx --yes wait-on http://127.0.0.1:4173
+
+      - name: Run E2E tests
+        env:
+          PLAYWRIGHT_BASE_URL: 'http://127.0.0.1:4173'
+          VITE_USE_MOCK_DATA: '1'
+          CI: 'true'
+        run: npm run test:e2e:ci
 
       - name: Upload Playwright report
         if: always()

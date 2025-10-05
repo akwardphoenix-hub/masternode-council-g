@@ -1,0 +1,4 @@
+[
+  { "type": "proposal:create", "id": "prop-001", "actor": "node.alpha", "timestamp": "2025-10-03T13:00:00Z" },
+  { "type": "vote:cast", "id": "prop-001", "actor": "node.alpha", "vote": "approve", "timestamp": "2025-10-05T10:00:00Z" }
+]

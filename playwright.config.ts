@@ -1,39 +1,29 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 4173;
-const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || `http://127.0.0.1:${PORT}`;
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4173';
 
 export default defineConfig({
+  testDir: 'e2e',
   timeout: 30_000,
-  expect: {
-    timeout: 5_000
-  },
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
-  reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
+  expect: { timeout: 5_000 },
+  fullyParallel: false,
+  retries: process.env.CI ? 1 : 0,
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list'], ['html']],
   use: {
-    baseURL: BASE_URL,
-    trace: 'retain-on-failure',
+    baseURL,
+    trace: 'on-first-retry',
+    video: 'off',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    viewport: { width: 1280, height: 800 }
   },
-  // webServer disabled - tests should run against already-built dist folder
-  // Start preview server manually before running tests: npm run preview
-  webServer: process.env.SKIP_WEBSERVER ? undefined : {
+  // No webServer when PLAYWRIGHT_BASE_URL is set (CI handles it)
+  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
     command: 'npm run preview',
-    url: `http://127.0.0.1:${PORT}`,
+    url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
-    // Ensure clean startup without external network calls
-    env: {
-      USE_MOCKS: '1',
-      NODE_ENV: 'test'
-    }
   },
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],
 });

@@ -1,17 +1,16 @@
-name: Copilot Pre-Setup
+# Pre-install steps Copilot should run BEFORE its firewall locks down.
+version: 1
 steps:
-  - name: Use Node
+  - name: Use Node 20
     run: |
-      node -v
-      npm -v
-  - name: Install dependencies
+      corepack enable
+      echo "Using Node $(node -v || true)"
+  - name: Install deps
     run: npm ci
-  - name: Install Playwright browsers
+  - name: Install playwright browsers (chromium only)
     run: npx playwright install chromium
-  - name: Build app for testing
+  - name: Build
     run: npm run build
-    env:
-      USE_MOCKS: '1'
-      NODE_ENV: 'test'
-  - name: Cache node_modules
-    run: echo "Cache handled by Actions; this is only for Copilot pre-warm."
+  - name: Validate
+    run: |
+      node -e "console.log('Build exists:', require('fs').existsSync('dist/index.html'))"

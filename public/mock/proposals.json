@@ -1,0 +1,18 @@
+[
+  {
+    "id": "prop-001",
+    "title": "Adopt council variant for next match",
+    "description": "Enable king protection when >50% of pieces remain.",
+    "createdAt": "2025-10-03T13:00:00Z",
+    "votingEndsAt": "2025-10-10T23:59:59Z",
+    "status": "active"
+  },
+  {
+    "id": "prop-002",
+    "title": "Buff Pawns +1 HP (pilot)",
+    "description": "Trial modifier: pawn-hp-buff for 1 cycle.",
+    "createdAt": "2025-10-04T09:30:00Z",
+    "votingEndsAt": "2025-10-11T23:59:59Z",
+    "status": "active"
+  }
+]

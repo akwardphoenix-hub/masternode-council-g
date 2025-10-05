@@ -6,8 +6,11 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "preview": "vite preview --host 0.0.0.0 --port 4173",
+        "preview": "vite preview --host 127.0.0.1 --strictPort",
         "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:ci": "playwright test --reporter=list",
+        "prepublish:check": "scripts/pre-publish-check.sh",
         "test:ci": "playwright test --reporter=dot",
         "test:ui": "playwright test --ui",
         "test:e2e:headed": "playwright test --headed",
