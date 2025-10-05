@@ -42,3 +42,28 @@ Architecture is inspired by **Brave Codex** and **Harmonic Math**:
 - Build must pass without warnings.
 
 ⚖️ Principle: **Repair before build.** If schema mismatch → fix JSON before adding features.
+
+# 📝 Copilot Meta-Instructions for Masternode Council Repo
+
+## Context
+This repository implements a two-layer “masternode” system:
+- Outer layer = public API & UI.
+- Inner layer = user’s node holding preferences/data.
+- All runtime network calls must be mocked or stubbed in tests.
+
+## Editing Rules
+1. **Do not** add real network calls inside runtime code or tests.
+   - Use local JSON files in `/data/` as stubs.
+   - For package installs, use `devDependencies` only and lock versions.
+2. **When E2E or CI/CD tests need external URLs**, replace with mocks:
+   - Example: `esm.ubuntu.com` → `mockSecurityUpdates.json`
+   - `api.github.com` → `mockRuntime.json`
+3. **Merge Conflicts**: always prefer the new “Brave Codex” docs + local JSONs.
+4. **Security Model**: treat each masternode like a sandbox. Don’t assume shared state.
+5. **Testing**:
+   - All tests must run with `--offline` mode.
+   - Add `VITE_OFFLINE=true` to `.env.test` to ensure no outbound requests.
+6. **PR Review**: Summarize any added dependencies and network calls in a “Dependencies Added” section.
+
+## Goal
+Make the repo fully self-contained and pass all E2E tests in an offline environment.
