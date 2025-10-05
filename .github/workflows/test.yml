@@ -30,6 +30,7 @@ jobs:
         env:
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
         run: npm run build
 
   e2e:
@@ -59,12 +60,14 @@ jobs:
         env:
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
         run: npm run build
 
       - name: Run E2E
         env:
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
         run: npx playwright test
 
       - name: Upload Playwright report

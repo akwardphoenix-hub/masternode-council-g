@@ -11,7 +11,7 @@ All E2E tests run against the built `/dist` folder using mocked data, eliminatin
 
 ## Quick Start - Always Offline
 
-**All commands use `USE_MOCKS=1` for fully offline operation:**
+**All commands use `USE_MOCKS=1` or `.env.test` for fully offline operation:**
 
 ### 1. Install Dependencies (one-time, requires network)
 
@@ -22,7 +22,21 @@ npx playwright install chromium
 
 > **Note**: This is the only step requiring network access. After installation, all development and testing is fully offline.
 
-### 2. Build the Application (offline)
+### 2. Use Test Environment (recommended)
+
+The repository includes a `.env.test` file that automatically enables offline mode:
+
+```bash
+# .env.test contains:
+# VITE_OFFLINE=true
+# VITE_USE_MOCKS=1
+# NODE_ENV=test
+# USE_MOCKS=1
+```
+
+This ensures all external network calls are mocked automatically.
+
+### 3. Build the Application (offline)
 
 ```bash
 USE_MOCKS=1 npm run build

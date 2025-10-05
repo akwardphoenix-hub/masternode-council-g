@@ -104,18 +104,36 @@ export const mockAPI = {
     model: 'mock-copilot-model',
     response: 'Mocked models.github.ai response',
     capabilities: ['code-completion', 'chat']
+  }),
+
+  // Mock api.github.com API
+  fetchGitHubAPI: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked api.github.com response',
+    data: []
+  }),
+
+  // Mock esm.ubuntu.com security updates
+  fetchUbuntuSecurityUpdates: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked Ubuntu ESM security updates',
+    updates: []
   })
 };
 
 /**
  * Check if mocks should be used
+ * Returns true when in test mode, offline mode, or USE_MOCKS is explicitly set
  */
 export const shouldUseMocks = (): boolean => {
   if (typeof process !== 'undefined' && process.env) {
-    return process.env.NODE_ENV === 'test' || process.env.USE_MOCKS === '1';
+    return process.env.NODE_ENV === 'test' || 
+           process.env.USE_MOCKS === '1' ||
+           process.env.VITE_OFFLINE === 'true';
   }
   if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-    return (import.meta as any).env.VITE_USE_MOCKS === '1';
+    return (import.meta as any).env.VITE_USE_MOCKS === '1' ||
+           (import.meta as any).env.VITE_OFFLINE === 'true';
   }
   return false;
 };
