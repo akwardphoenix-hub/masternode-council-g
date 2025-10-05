@@ -89,18 +89,51 @@ export const mockAPI = {
   fetchBillById: (billId: string) => {
     const bill = mockBills.find(b => billId.includes(b.number.toLowerCase()));
     return Promise.resolve(bill || mockBills[0]);
-  }
+  },
+
+  // Mock runtime.github.com API
+  fetchGitHubRuntime: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked runtime.github.com response',
+    version: '1.0.0-mock'
+  }),
+
+  // Mock models.github.ai API
+  fetchGitHubModels: () => Promise.resolve({
+    status: 'ok',
+    model: 'mock-copilot-model',
+    response: 'Mocked models.github.ai response',
+    capabilities: ['code-completion', 'chat']
+  }),
+
+  // Mock api.github.com API
+  fetchGitHubAPI: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked api.github.com response',
+    data: []
+  }),
+
+  // Mock esm.ubuntu.com security updates
+  fetchUbuntuSecurityUpdates: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked Ubuntu ESM security updates',
+    updates: []
+  })
 };
 
 /**
  * Check if mocks should be used
+ * Returns true when in test mode, offline mode, or USE_MOCKS is explicitly set
  */
 export const shouldUseMocks = (): boolean => {
   if (typeof process !== 'undefined' && process.env) {
-    return process.env.NODE_ENV === 'test' || process.env.USE_MOCKS === '1';
+    return process.env.NODE_ENV === 'test' || 
+           process.env.USE_MOCKS === '1' ||
+           process.env.VITE_OFFLINE === 'true';
   }
   if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-    return (import.meta as any).env.VITE_USE_MOCKS === '1';
+    return (import.meta as any).env.VITE_USE_MOCKS === '1' ||
+           (import.meta as any).env.VITE_OFFLINE === 'true';
   }
   return false;
 };

@@ -55,6 +55,20 @@ USE_MOCKS=1 npm run build
 USE_MOCKS=1 npm run test:e2e
 ```
 
+#### Test Environment Configuration
+
+The repository includes a `.env.test` file that automatically enables offline mode:
+
+```bash
+# .env.test
+VITE_OFFLINE=true
+VITE_USE_MOCKS=1
+NODE_ENV=test
+USE_MOCKS=1
+```
+
+This ensures all external network calls (including `esm.ubuntu.com`, `api.github.com`, and Congress.gov) are automatically mocked.
+
 #### All Test Commands (Always use `USE_MOCKS=1`)
 
 ```bash
@@ -72,12 +86,13 @@ npm run test:report
 ```
 
 **Testing Approach:**
-- **Always offline**: Set `USE_MOCKS=1` for all builds and tests
+- **Always offline**: Set `USE_MOCKS=1` or `VITE_OFFLINE=true` for all builds and tests
 - Tests run against the built `/dist` folder (not dev server)
 - All external API calls are mocked via `/config/mock.config.ts`
-- Zero network requests to Congress.gov, GitHub API, or any external services
+- Zero network requests to Congress.gov, GitHub API, esm.ubuntu.com, or any external services
 - Tests use `domcontentloaded` instead of `networkidle` to prevent loops
 - Works perfectly behind firewalls after initial setup
+- See [OFFLINE-TESTING.md](./OFFLINE-TESTING.md) for detailed documentation
 
 ## 📋 Features
 

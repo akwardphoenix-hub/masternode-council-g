@@ -4,13 +4,69 @@ on:
   push:
     branches: [ main ]
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint || true
+
+      - name: Type check and build
+        env:
+          USE_MOCKS: '1'
+          NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
+        run: npm run build
+
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run build
-      - run: npm run test:e2e
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      # Avoid apt/ESM hits that get firewall-blocked. Only fetch Chromium.
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Build app
+        env:
+          USE_MOCKS: '1'
+          NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
+        run: npm run build
+
+      - name: Run E2E
+        env:
+          USE_MOCKS: '1'
+          NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report

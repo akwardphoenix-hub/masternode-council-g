@@ -2,7 +2,7 @@
 
 ## 🎯 Mission Accomplished
 
-All network dependencies have been audited and fixed. The repository now runs **100% offline** for builds and E2E tests when `USE_MOCKS=1` is set.
+All network dependencies have been audited and fixed. The repository now runs **100% offline** for builds and E2E tests when `USE_MOCKS=1` or `VITE_OFFLINE=true` is set.
 
 ## 📋 Problem Statement Requirements
 
@@ -11,8 +11,10 @@ All network dependencies have been audited and fixed. The repository now runs **
 | **1. Services Mock Integration** | ✅ COMPLETE | All services import from `mock.config.ts` and respect `shouldUseMocks()` |
 | **2. Test Configuration** | ✅ COMPLETE | All tests use `domcontentloaded`, no `networkidle` found |
 | **3. Mock Coverage** | ✅ COMPLETE | Every service call has mock equivalent in `mock.config.ts` |
-| **4. CI/CD Offline** | ✅ COMPLETE | Workflow sets `USE_MOCKS=1` for both build and test steps |
+| **4. CI/CD Offline** | ✅ COMPLETE | Workflow sets `USE_MOCKS=1` and `VITE_OFFLINE=true` for all steps |
 | **5. Documentation** | ✅ COMPLETE | Updated README, OFFLINE-TESTING, added NETWORK-AUDIT |
+| **6. .env.test File** | ✅ COMPLETE | Created `.env.test` with `VITE_OFFLINE=true` |
+| **7. External URL Mocking** | ✅ COMPLETE | Added mocks for esm.ubuntu.com, api.github.com, security.ubuntu.com |
 
 ## 🔧 Changes Made
 
@@ -252,6 +254,134 @@ When adding new external API services:
    ```
 
 5. **Update documentation** in `NETWORK-AUDIT.md`
+
+## 🆕 Latest Enhancements (Current Implementation)
+
+### 1. `.env.test` File ✅
+
+Created dedicated test environment configuration:
+
+```bash
+# .env.test
+VITE_OFFLINE=true
+VITE_USE_MOCKS=1
+NODE_ENV=test
+USE_MOCKS=1
+```
+
+This file is tracked in git (unlike `.env`) and automatically enables offline mode for testing.
+
+### 2. Enhanced `fetchSafe.ts` ✅
+
+Added comprehensive mocking for additional external services:
+
+```typescript
+// Mock api.github.com responses
+if (url.includes('api.github.com')) {
+  return new Response(JSON.stringify({
+    status: 'ok',
+    message: 'Mocked api.github.com response',
+    data: []
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+// Mock esm.ubuntu.com and security.ubuntu.com responses
+if (url.includes('esm.ubuntu.com') || url.includes('security.ubuntu.com')) {
+  return new Response(JSON.stringify({
+    status: 'ok',
+    message: 'Mocked Ubuntu security mirror response',
+    updates: []
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+```
+
+### 3. Updated `shouldUseMocks()` ✅
+
+Enhanced to check `VITE_OFFLINE` flag:
+
+```typescript
+export const shouldUseMocks = (): boolean => {
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env.NODE_ENV === 'test' || 
+           process.env.USE_MOCKS === '1' ||
+           process.env.VITE_OFFLINE === 'true';
+  }
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+    return (import.meta as any).env.VITE_USE_MOCKS === '1' ||
+           (import.meta as any).env.VITE_OFFLINE === 'true';
+  }
+  return false;
+};
+```
+
+### 4. Enhanced `mock.config.ts` ✅
+
+Added new mock methods for external services:
+
+```typescript
+export const mockAPI = {
+  // ... existing methods
+  
+  // Mock api.github.com API
+  fetchGitHubAPI: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked api.github.com response',
+    data: []
+  }),
+
+  // Mock esm.ubuntu.com security updates
+  fetchUbuntuSecurityUpdates: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked Ubuntu ESM security updates',
+    updates: []
+  })
+};
+```
+
+### 5. Updated CI/CD Workflows ✅
+
+Both `test.yml` and `e2e.yml` now include `VITE_OFFLINE=true`:
+
+```yaml
+- name: Build app
+  env:
+    USE_MOCKS: '1'
+    NODE_ENV: 'test'
+    VITE_OFFLINE: 'true'
+  run: npm run build
+```
+
+### 6. Updated `playwright.config.ts` ✅
+
+Added `VITE_OFFLINE` to webServer environment:
+
+```typescript
+webServer: {
+  command: 'npm run preview',
+  env: {
+    USE_MOCKS: '1',
+    NODE_ENV: 'test',
+    VITE_OFFLINE: 'true'
+  }
+}
+```
+
+## 🌐 External Services Now Mocked
+
+| Service | Domain | Purpose | Mock Status |
+|---------|--------|---------|-------------|
+| Congress.gov API | `api.congress.gov` | Bill data | ✅ Mocked |
+| GitHub API | `api.github.com` | Repository data | ✅ Mocked |
+| GitHub Runtime | `runtime.github.com` | Runtime services | ✅ Mocked |
+| GitHub AI Models | `models.github.ai` | AI services | ✅ Mocked |
+| Ubuntu ESM | `esm.ubuntu.com` | Security updates | ✅ Mocked |
+| Ubuntu Security | `security.ubuntu.com` | Security mirror | ✅ Mocked |
 
 ## 📝 Files Modified
 

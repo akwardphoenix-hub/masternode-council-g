@@ -1,21 +1,42 @@
+# Pre-install steps for Copilot agent before firewall comes up
+# Works across all Spark repos (council, chess, rap game)
+
 name: Copilot setup steps (pre-firewall)
 version: 1
+
 steps:
+  # 1. Ensure correct Node version
   - name: Use Node 20
     run: |
       node -v || true
       npm -v || true
+
+  # 2. Install all dependencies with lockfile
   - name: Install deps
     run: npm ci
+
+  # 3. Install Playwright Chromium browser
   - name: Install Playwright Chromium
     run: npx playwright install chromium
+
+  # 4. Run lint & type check (gives Copilot a clean slate)
   - name: Typecheck & Lint
     run: |
       npm run typecheck --if-present
       npm run lint --if-present
+
+  # 5. Build app before tests (avoids vite runtime calls under firewall)
   - name: Build
     run: npm run build
+
+  # 6. Smoke preview test
   - name: Smoke preview
     run: |
       (npm run preview &) && sleep 2
       curl -sSf http://localhost:4173 > /dev/null
+
+  # 7. Confirm all scripts are available
+  - name: List available scripts
+    run: |
+      echo "=== Available Scripts ==="
+      cat package.json | grep -A 20 '"scripts"'
