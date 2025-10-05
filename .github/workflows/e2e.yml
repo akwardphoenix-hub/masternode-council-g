@@ -26,6 +26,7 @@ jobs:
         env:
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
         run: npm run build
 
   e2e:
@@ -54,12 +55,14 @@ jobs:
         env:
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
         run: npm run build
 
       - name: Start preview server
         env:
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
         run: |
           npx vite preview --host 0.0.0.0 --port 4173 --strictPort &> /dev/null &
           npx --yes wait-on http://0.0.0.0:4173
@@ -69,6 +72,7 @@ jobs:
           PLAYWRIGHT_BASE_URL: 'http://0.0.0.0:4173'
           USE_MOCKS: '1'
           NODE_ENV: 'test'
+          VITE_OFFLINE: 'true'
           CI: 'true'
         run: npm run test:e2e:ci
 

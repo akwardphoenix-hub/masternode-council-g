@@ -26,7 +26,8 @@ export default defineConfig({
     timeout: 60_000,
     env: {
       USE_MOCKS: '1',
-      NODE_ENV: 'test'
+      NODE_ENV: 'test',
+      VITE_OFFLINE: 'true'
     }
   },
   projects: [

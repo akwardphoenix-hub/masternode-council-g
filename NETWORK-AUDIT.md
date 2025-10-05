@@ -5,13 +5,14 @@
 
 ## Executive Summary
 
-This repository has been audited for network dependencies and is now **100% offline capable** for builds and E2E tests when `USE_MOCKS=1` is set.
+This repository has been audited for network dependencies and is now **100% offline capable** for builds and E2E tests when `USE_MOCKS=1` or `VITE_OFFLINE=true` is set.
 
 ### Key Achievement
 - ✅ Zero external network calls during build and test phases
-- ✅ All services properly mock-aware
+- ✅ All services properly mock-aware (including esm.ubuntu.com, api.github.com, Congress.gov)
 - ✅ CI/CD pipeline fully offline-capable
 - ✅ Comprehensive documentation
+- ✅ `.env.test` file for automatic offline mode
 
 ## Services Audited
 
@@ -68,6 +69,21 @@ if (shouldUseMocks()) {
 - **Location**: `src/mocks/mockServer.ts`
 - **External Dependency**: None - fetches from `/mocks/` (local files)
 - **Mock Support**: Self-contained mock service
+
+### 5. fetchSafe.ts ✅
+**Status**: ENHANCED
+
+- **Location**: `src/lib/fetchSafe.ts`
+- **External Dependencies**: Multiple external services blocked in test mode
+- **Mock Support**: Comprehensive external URL blocking and mocking
+
+**Mocked External Services:**
+- `runtime.github.com` - GitHub runtime API
+- `models.github.ai` - GitHub AI models API
+- `api.github.com` - GitHub REST API
+- `esm.ubuntu.com` - Ubuntu ESM security updates
+- `security.ubuntu.com` - Ubuntu security mirror
+- `api.congress.gov` - Congress.gov API (fallback)
 
 ## Mock Configuration
 
@@ -134,10 +150,27 @@ webServer: {
   command: 'npm run preview',
   env: {
     USE_MOCKS: '1',      // ✅ Already set
-    NODE_ENV: 'test'     // ✅ Already set
+    NODE_ENV: 'test',    // ✅ Already set
+    VITE_OFFLINE: 'true' // ✅ ADDED for comprehensive offline mode
   }
 }
 ```
+
+### Test Environment Configuration ✅
+
+**File**: `.env.test`
+
+Created dedicated test environment file:
+
+```bash
+# .env.test
+VITE_OFFLINE=true
+VITE_USE_MOCKS=1
+NODE_ENV=test
+USE_MOCKS=1
+```
+
+This ensures all external network calls are automatically mocked in test environments.
 
 ## CI/CD Pipeline
 
@@ -149,13 +182,15 @@ webServer: {
 ```yaml
 - name: Build
   env:
-    USE_MOCKS: '1'  # ✅ ADDED
+    USE_MOCKS: '1'       # ✅ ADDED
+    VITE_OFFLINE: 'true' # ✅ ADDED
   run: npm run build
 
 - name: Run E2E tests (offline with mocks)
   env:
-    USE_MOCKS: '1'  # ✅ Already present
-    NODE_ENV: 'test' # ✅ Already present
+    USE_MOCKS: '1'       # ✅ Already present
+    NODE_ENV: 'test'     # ✅ Already present
+    VITE_OFFLINE: 'true' # ✅ ADDED
   run: npm run test:ci
 ```
 
