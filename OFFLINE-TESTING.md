@@ -5,9 +5,16 @@ This project is configured to run **completely offline** without any external ne
 ## Overview
 
 All E2E tests run against the built `/dist` folder using mocked data, eliminating the need for:
-- External API calls (Congress.gov, GitHub API, etc.)
+- External API calls (Congress.gov, GitHub API, runtime.github.com, models.github.ai, etc.)
 - Live development servers
 - Network connectivity during test execution
+
+### Network Configuration
+
+The application now supports both `127.0.0.1` and `0.0.0.0` binding:
+- **Development**: Server binds to `0.0.0.0` for container/CI compatibility
+- **Testing**: Mock responses for GitHub runtime/AI endpoints in test mode
+- **CI/CD**: All workflows use `USE_MOCKS=1` and `NODE_ENV=test`
 
 ## Quick Start - Always Offline
 
@@ -111,12 +118,17 @@ Playwright is configured to avoid network loops:
 
 ## CI/CD Integration
 
-The `.github/workflows/test.yml` workflow:
+The `.github/workflows/test.yml` and `.github/workflows/e2e.yml` workflows:
 
 1. Installs dependencies (`npm ci`)
 2. Installs Playwright browsers (`npx playwright install chromium`)
-3. Builds the app (`npm run build`)
-4. Runs tests offline (`USE_MOCKS=1 npm run test:ci`)
+3. Builds the app with mocks (`USE_MOCKS=1 NODE_ENV=test npm run build`)
+4. Runs tests offline (`USE_MOCKS=1 NODE_ENV=test npm run test:ci`)
+
+**Key Configuration:**
+- Server binds to `0.0.0.0` for container/CI compatibility (not `127.0.0.1`)
+- All external network calls are mocked including GitHub domains
+- Environment variables ensure offline operation throughout pipeline
 
 ## Firewall-Friendly Setup
 
@@ -162,6 +174,16 @@ npx playwright install chromium
 1. Check that `USE_MOCKS=1` is set
 2. Verify service files import and use `shouldUseMocks()`
 3. Add new API endpoints to `/config/mock.config.ts`
+
+### GitHub Copilot Domains Blocked
+
+**Symptom**: Errors related to `runtime.github.com` or `models.github.ai`
+
+**Solution**:
+
+1. In test mode, these domains are automatically mocked by `fetchSafe.ts`
+2. For production use, add domains to Copilot allowlist (see `COPILOT-ALLOWLIST.md`)
+3. Verify `NODE_ENV=test` or `USE_MOCKS=1` is set in CI/CD
 
 ### Mock Data Not Loading
 
@@ -236,6 +258,7 @@ All these services respect `USE_MOCKS=1`:
 - ✅ `congressService.js` - Congress.gov bills listing
 - ✅ `mergedLoader.js` - Local council data
 - ✅ `mockServer.ts` - Static file fetching
+- ✅ `fetchSafe.ts` - GitHub runtime.github.com and models.github.ai mocking
 
 ### Pre-Publish Validation
 
