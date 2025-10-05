@@ -27,6 +27,9 @@ jobs:
         run: npm run lint || true
 
       - name: Type check and build
+        env:
+          USE_MOCKS: '1'
+          NODE_ENV: 'test'
         run: npm run build
 
   e2e:
@@ -53,9 +56,15 @@ jobs:
         run: npx playwright install chromium
 
       - name: Build app
+        env:
+          USE_MOCKS: '1'
+          NODE_ENV: 'test'
         run: npm run build
 
       - name: Run E2E
+        env:
+          USE_MOCKS: '1'
+          NODE_ENV: 'test'
         run: npx playwright test
 
       - name: Upload Playwright report
