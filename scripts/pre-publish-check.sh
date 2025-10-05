@@ -1,18 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
-echo "Node: $(node -v)"
-echo "NPM:  $(npm -v)"
 
-echo "Installing deps..."
+echo "🔎 Node/npm:"
+node -v || true
+npm -v || true
+
+echo "📦 Install deps"
 npm ci
 
-echo "Type-check + build..."
+echo "🔤 Typecheck"
+npm run typecheck || true
+
+echo "🧹 Lint"
+npm run lint || true
+
+echo "🏗️ Build"
 npm run build
 
-echo "Install PW browsers (chromium only)..."
+echo "🧪 Install Playwright browsers"
 npx playwright install chromium
 
-echo "Run E2E..."
-npx playwright test
+echo "🧭 E2E"
+npm run test:e2e
 
-echo "OK ✅"
+echo "✅ All checks attempted. Review failures above (if any)."

@@ -9,6 +9,16 @@ A professional-grade, decentralized governance platform for managing proposals, 
 
 > **Ethical & Open Source**: Built with transparency, community collaboration, and educational purposes in mind. See [LEGAL.md](./LEGAL.md) for full details.
 
+## Offline Dev / Tests
+- This repo is configured for **offline-first** development.
+- All data loads from `/public/data/*.json`.
+- To run:
+  - `npm ci`
+  - `npx playwright install chromium`
+  - `npm run build && npm run test:e2e`
+
+If you see firewall blocks (esm.ubuntu.com, api.github.com), that's expected in the agent sandbox. The **copilot-setup-steps** pre-installs what it needs before firewall rules apply.
+
 ## 🚀 Quick Start
 
 ### Development
