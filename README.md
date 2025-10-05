@@ -1,6 +1,13 @@
 # Masternode Council Governance App
 
-A decentralized governance platform for managing proposals, voting mechanisms, and maintaining transparent audit trails across distributed nodes.
+[![Build Status](https://github.com/akwardphoenix-hub/masternode-council-g/workflows/e2e/badge.svg)](https://github.com/akwardphoenix-hub/masternode-council-g/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://reactjs.org/)
+
+A professional-grade, decentralized governance platform for managing proposals, voting mechanisms, and maintaining transparent audit trails across distributed nodes.
+
+> **Ethical & Open Source**: Built with transparency, community collaboration, and educational purposes in mind. See [LEGAL.md](./LEGAL.md) for full details.
 
 ## 🚀 Quick Start
 
@@ -172,19 +179,55 @@ This validates:
 
 ## 📚 Documentation
 
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines and standards
+- **[CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)** - Community standards
+- **[SECURITY.md](./SECURITY.md)** - Security policy and reporting
+- **[LEGAL.md](./LEGAL.md)** - Legal information, licensing, and disclaimers
 - [PRD.md](./PRD.md) - Product Requirements Document
 - [TESTING.md](./TESTING.md) - Comprehensive Testing Guide
-- [OFFLINE-TESTING.md](./OFFLINE-TESTING.md) - **Offline Testing Guide (No External Network Required)**
+- [OFFLINE-TESTING.md](./OFFLINE-TESTING.md) - Offline Testing Guide
 - [e2e/README.md](./e2e/README.md) - End-to-End Test Documentation
 
 ## 🤝 Contributing
 
-1. Create a feature branch
-2. Make your changes
-3. Write/update tests
-4. Run `npm run test:e2e` to verify
-5. Submit a pull request
+We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md) for details on:
+- Code of Conduct
+- Development workflow
+- Coding standards
+- Testing requirements
+- Pull request process
+
+Quick start:
+1. Fork and create a feature branch
+2. Make your changes following our [coding standards](./CONTRIBUTING.md#coding-standards)
+3. Write/update tests: `npm run test:e2e`
+4. Lint your code: `npm run lint`
+5. Submit a pull request with clear description
+
+## ⚖️ Governance Philosophy
+
+This project follows **Harmonic Math** principles for collaborative development:
+- **1 = Self**: Individual contributions and agency
+- **2 = Other**: Mutual respect and collaboration
+- **3 = We**: Community consensus building
+- **4 = Council**: Structured decision-making
+
+We believe in **transparency**, **accountability**, and **ethical open-source development**.
+
+## 🌟 Ethical Stance
+
+- **100% Open Source** - All code is publicly available
+- **Non-Commercial Philosophy** - Built for community benefit and education
+- **Privacy First** - No data collection, no tracking, no cookies
+- **Transparent Governance** - All decisions documented and public
+- **Educational Mission** - Designed to teach and demonstrate governance concepts
+
+See [LEGAL.md](./LEGAL.md) for complete details on licensing, privacy, and ethical commitments.
 
 ## 📄 License
 
+MIT License - Copyright © 2024
+
 The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
+
+See [LICENSE](./LICENSE) and [LEGAL.md](./LEGAL.md) for full legal information.
