@@ -8,10 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Progress } from '@/components/ui/progress'
-import { Scales, Plus, Check, X, Clock, Eye, Users, FileText, FunnelSimple, SortAscending, Warning } from '@phosphor-icons/react'
+import { Scales, Plus, Check, X, Eye, Users, FileText, FunnelSimple, SortAscending, Warning } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface Proposal {
