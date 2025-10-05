@@ -12,7 +12,7 @@ echo "🔤 Typecheck"
 npm run typecheck || true
 
 echo "🧹 Lint"
-npm run lint || true
+npm run lint
 
 echo "🏗️ Build"
 npm run build
