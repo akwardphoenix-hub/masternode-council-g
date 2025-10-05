@@ -1,6 +1,7 @@
 // Congress API Service for Spark Governance App
 // Replace API_KEY with your actual key if available
 import { shouldUseMocks, mockAPI } from '../../config/mock.config';
+import { fetchSafe } from '../lib/fetchSafe';
 
 export async function fetchBillData(congress, billType, billNumber, apiKey = "API_KEY") {
   // Use mock data in test/offline mode
@@ -10,7 +11,7 @@ export async function fetchBillData(congress, billType, billNumber, apiKey = "AP
   
   const endpoint = `https://api.congress.gov/v3/bill/${congress}/${billType}/${billNumber}`;
   try {
-    const res = await fetch(endpoint, {
+    const res = await fetchSafe(endpoint, {
       headers: {
         "X-Api-Key": apiKey
       }
