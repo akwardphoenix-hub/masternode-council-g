@@ -89,7 +89,22 @@ export const mockAPI = {
   fetchBillById: (billId: string) => {
     const bill = mockBills.find(b => billId.includes(b.number.toLowerCase()));
     return Promise.resolve(bill || mockBills[0]);
-  }
+  },
+
+  // Mock runtime.github.com API
+  fetchGitHubRuntime: () => Promise.resolve({
+    status: 'ok',
+    message: 'Mocked runtime.github.com response',
+    version: '1.0.0-mock'
+  }),
+
+  // Mock models.github.ai API
+  fetchGitHubModels: () => Promise.resolve({
+    status: 'ok',
+    model: 'mock-copilot-model',
+    response: 'Mocked models.github.ai response',
+    capabilities: ['code-completion', 'chat']
+  })
 };
 
 /**
