@@ -23,7 +23,7 @@ steps:
   - name: Typecheck & Lint
     run: |
       npm run typecheck --if-present
-      npm run lint --if-present
+      npm run lint
 
   # 5. Build app before tests (avoids vite runtime calls under firewall)
   - name: Build
